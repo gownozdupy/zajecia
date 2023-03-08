@@ -1,0 +1,119 @@
+//#include <stdio.h>
+//#include <math.h>
+//
+//struct Triangle {
+//    char exists;    // 't' - if triangle exists, 'n' - if not
+//    int number;     // index of triangle with smallest area or -1 if no triangle exists
+//    double area;    // area of triangle with smallest area or -1 if no triangle exists
+//};
+//
+//struct Triangle checkTriangles(double triangles[][3], int n) {
+//    struct Triangle result = { 'n', -1, -1 };   // initialize the result struct
+//
+//    int smallest_area_index = -1;
+//    double smallest_area = INFINITY;
+//
+//    for (int i = 0; i < n; i++) {
+//        double a = triangles[i][0];
+//        double b = triangles[i][1];
+//        double c = triangles[i][2];
+//
+//        if (a + b > c && b + c > a && c + a > b) {    // check if a triangle can be built
+//            double p = (a + b + c) / 2;
+//            double area = sqrt(p * (p - a) * (p - b) * (p - c));
+//
+//            if (area < smallest_area) {
+//                smallest_area = area;
+//                smallest_area_index = i;
+//            }
+//
+//            result.exists = 't';
+//        }
+//    }
+//
+//    result.number = smallest_area_index;
+//    result.area = smallest_area;
+//
+//    return result;
+//}
+//
+//int main() {
+//    int n;
+//    printf("Enter the number of triangles: ");
+//    scanf_s("%d", &n);
+//
+//    double triangles[10][3];
+//    printf("Enter the lengths of the sides of each triangle:\n");
+//    for (int i = 0; i < n; i++) {
+//        printf("Triangle %d: ", i + 1);
+//        scanf_s("%lf %lf %lf", &triangles[i][0], &triangles[i][1], &triangles[i][2]);
+//    }
+//
+//    struct Triangle result = checkTriangles(triangles, n);
+//
+//    if (result.exists == 't') {
+//        printf("Triangle %d: %.2lf %.2lf %.2lf, area: %.2lf\n", result.number + 1, triangles[result.number][0], triangles[result.number][1], triangles[result.number][2], result.area);
+//    }
+//    else {
+//        printf("No triangle can be built from the given sides.\n");
+//    }
+//
+//    return 0;
+
+#include <stdio.h>
+#include <math.h>
+#define MAX_ILOSC 10 //przykładowa maksymalna ilość trójkątów
+
+typedef struct {
+    char istnieje; // znakowe - 't' lub 'n'
+    int numer; // liczbowe - nr figury z najmniejszym polem lub -1
+    double pole; // rzeczywiste - pole figury lub -1
+} Wynik;
+
+Wynik sprawdz_trojkaty(double trojkaty[][3], int n) {
+    Wynik wynik = { 'n', -1, -1 }; // inicjalizacja struktury wyniku
+    double min_pole = INFINITY; // wartość minimalna pola trójkąta
+
+        for (int i = 0; i < n; i++) {
+            double a = trojkaty[i][0], b = trojkaty[i][1], c = trojkaty[i][2];
+            if (a + b > c && a + c > b && b + c > a) {    // spełniona własność trójkąta
+                double przeciwprostokatna;    // długość przeciwprostokątnej
+                if (a > b && a > c) przeciwprostokatna = a, b* b + c * c == przeciwprostokatna * przeciwprostokatna;
+                else if (b > c) przeciwprostokatna = b, a* a + c * c == przeciwprostokatna * przeciwprostokatna;
+                else przeciwprostokatna = c, a* a + b * b == przeciwprostokatna * przeciwprostokatna;
+                if (przeciwprostokatna > 0) {    // spełniona własność trójkąta prostokątnego
+                    double pole = (a * b) / 2;    // obliczenie pola
+                    if (pole < min_pole) {    // jeśli mniejsze niż dotychczasowe minimum
+                        min_pole = pole;
+                        wynik.numer = i;
+                        wynik.pole = pole;
+                    }
+                    wynik.istnieje = 't';
+                }
+            }
+        }
+    return wynik;
+}
+
+int main() {
+    int n;
+    printf("Podaj liczbe trojek: ");
+    scanf_s("%d", &n);
+       double trojkaty[MAX_ILOSC][3];
+    for (int i = 0; i < n; i++) {
+        printf("Podaj boki trójkąta nr %d: ", i + 1);
+        scanf_s("%lf %lf %lf", &trojkaty[i][0], &trojkaty[i][1], &trojkaty[i][2]);
+    }
+
+    Wynik wynik = sprawdz_trojkaty(trojkaty, n);
+    if (wynik.istnieje == 't') {
+        printf("Znaleziono trójkąt prostokątny o najmniejszym polu:\n");
+        printf("Numer: %d\nBoki: %lf, %lf, %lf\nPole: %lf\n",
+            wynik.numer + 1, trojkaty[wynik.numer][0], trojkaty[wynik.numer][1], trojkaty[wynik.numer][2], wynik.pole);
+    }
+    else {
+                printf("Z podanych bokow nie da sie stworzyc trojkata.\n");
+            }
+        
+            return 0;
+        }
