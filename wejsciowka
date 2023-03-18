@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#pragma warning( disable : 4996 )
+
+
+// Funkcja zamieniająca ciąg znaków binarnych na liczbę całkowitą
+int bin2int(char* t) {
+    int wynik = 0;
+    int dlugosc = (int)strlen(t);
+    for (int i = 1; i < dlugosc; i++) {
+        (int)wynik += (t[i] - '0') * pow(2, dlugosc - i - 1);
+    }
+    return wynik;
+}
+
+// Funkcja zamieniająca miejsca dwóch wskaźników
+void swap(char** x, char** y) {
+    char* temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+int main() {
+    int m, n;
+    printf("Podaj liczbe wierszy m: ");
+    scanf_s("%d", &m);
+    printf("Podaj liczbe kolumn n: ");
+    scanf_s("%d", &n);
+
+    // Alokacja pamięci dla tablicy dwuwymiarowej przechowującej dane typu char
+    char** tab = (char**)malloc(m * sizeof(char*));
+    for (int i = 0; i < m; i++) {
+        tab[i] = (char*)malloc(n * sizeof(char));
+    }
+
+    // Wczytanie liczb z pliku tekstowego i zapisanie ich w tablicy
+    FILE* file = fopen("plik.txt", "r");
+    int i = 0;
+    if (file == NULL) {
+        printf("Cos poszlo nie tak...\n");
+        return 1;
+    }
+    while (fscanf(file, "%s", tab[i]) != EOF) {
+        i++;
+    }
+    fclose(file);
+
+    // Wywołanie funkcji bin2int dla każdego ciągu binarnego i wypisanie wyniku w konsoli
+    for (int j = 0; j < i; j++) {
+        printf("%d\t[%s]\n", bin2int(tab[j]), tab[j]);
+    }
+
+    // Sortowanie ciągów binarnych w tablicy tab
+    for (int j = 0; j < i - 1; j++) {
+        int min_idx = j;
+        for (int k = j + 1; k < i; k++) {
+            if (bin2int(tab[k]) > bin2int(tab[min_idx])) {
+                min_idx = k;
+            }
+        }
+        swap(&tab[j], &tab[min_idx]);
+    }
+
+    // Wypisanie wartości liczbowych dla wszystkich ciągów binarnych w tablicy tab
+    printf("\nPo sortowaniu:\n");
+    for (int j = 0; j < i; j++) {
+        printf("%d\t[%s]\n", bin2int(tab[j]), tab[j]);
+    }
+
+    // Zwolnienie zaalokowanej pamięci
+    for (int i = 0; i < m; i++) {
+        free(tab[i]);
+    }
+    free(tab);
+
+    return 0;
+}
