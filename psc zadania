@@ -1,0 +1,3669 @@
+
+/*===========================================================================*/
+/*                               ZADANIE 44                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie znaku i wyswietla kod ASCII dla niego.\nAutor: Anna Prusakow.\n");
+	printf("Podaj znak: \n");
+	char znak;
+	if (scanf_s("%c", &znak, 1) != 1 || getchar() != '\n') {
+		printf("Podales zle dane.\nKoniec\n");
+		return 0;
+	}
+	printf("Dla podanego znaku: %c kod ASCII wynosi: %d.\n", znak, (int)znak);
+	printf("Koniec.\n");
+}
+/*
+
+/*===========================================================================*/
+/*                               ZADANIE 45                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie kodu ASCII ze\nzbioru podst. i wypisuje znak dla niego.\nAutor: Anna Prusakow.\n");
+	printf("Podaj kod: \n");
+	int kod;
+	if (scanf_s("%d", &kod) != 1 || getchar() != '\n'){
+		printf("Podales zle dane.\nKoniec\n");
+		return 0;
+	}
+	if((kod>=32)&&(kod<=126)){
+		kod = (char)kod;
+	printf("Podales kod znaku drukowalnego %c.\n", kod);
+	printf("Koniec.\n");
+	return 0;
+	}
+	
+	else if ((kod==123 || kod>=0 && kod<=31)){
+		printf("Podales kod znaku kontrolnego.\nKoniec.\n");
+		return 0;
+	}
+	else {
+	printf("Podany kod nie istnieje w tabeli ASCII.\nKoniec.\n");
+	return 0;
+	}
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 46                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie godziny w formacie hh:mm,\na nastepnie sprawdza poprawnosc wprowadzonych danych\noraz wypisuje informacje podane przez uzytkownika.\n");
+	printf("Autor: Anna Prusakow.\n");
+	printf("Podaj godzine w formacie hh:mm: \n");
+	int godz = 0; // wczytana godzina, zakres 0 - 23
+	int min = 0; // wczytane minuty, zakres 0 - 59
+	char znak; // wczytany znak, kolejno znajda sie tu wszystkie znaki
+	//wczytywanie pierwszego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Pierwszy znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '2') { // wazne
+		printf("Pierwszy znak powinien byc cyfra 0, 1, 2.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	godz = znak - '0'; // wazne, bez tego kompilator pokazuje, ze godzina powinna byc z zakresu (0-23)
+	// wczytywanie drugiego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Drugi znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	godz = 10 * godz + (znak - '0'); // wazne
+	if (godz > 23) { // wazne
+		printf("Godzina powinna byc z zakresu 0-23.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie trzeciego znaku 
+	if (getchar() != ':') { // wazne
+		printf("Trzeci znak powinien byc dwukropiem.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie czwartego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Czwarty znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '5') { // wazne
+		printf("Czwarty znak powinien byc cyfra od 0 do 5.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	min = znak - '0'; // wazne
+	// wczytywanie piatego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Piaty znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	min = 10 * min + (znak - '0'); // wazne
+	if (min > 59) { // wazne
+		printf("Godzina powinna byc z zakresu 0-59.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie szostego znaku
+	if (getchar() != '\n') { // wazne
+		printf("Trzeci znak powinien byc enterem.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	//wypisywanie godziny
+	printf("Oto wczytana godzina:\n%d ", min);
+	if (min==1){
+		printf("minuta");
+	}
+	else if (min > 10 && min < 19) {
+		printf("minut");
+	}
+	else if ((min%10)>= 2 && (min%10) <= 4) {
+		printf("minuty");
+	}
+	else {
+		printf("minut");
+	}
+	printf(" po %d.\nKoniec.\n", godz);
+	return 0;
+}
+*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 47                                  */
+/*===========================================================================*/
+
+
+
+/*#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie daty z lat 2001 - 2050 w formacie\ndd.mm.rr, a nastepnie sprawdza poprawnosc wprowadzonych danych\noraz wypisuje informacje podane przez uzytkownika.\n");
+	printf("Autor: Anna Prusakow.\n");
+	printf("Podaj date z lat 2001-2050 w formacie dd.mm.rr: \n");
+	int dzien = 0; // wczytany dzien, zakres 0-31
+	int miesiac = 1; // wczytany miesiac, zakres 1-12
+	int rok = 2001;
+	char znak; // wczytany znak, kolejno znajda sie tu wszystkie znaki
+	//wczytywanie pierwszego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Pierwszy znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '3') { // wazne
+		printf("Pierwszy znak powinien byc cyfra 0,1,2,3.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	dzien = znak - '0'; // wazne
+	// wczytywanie drugiego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Drugi znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	dzien = 10 * dzien + (znak - '0'); // wazne
+	if (dzien > 31) { // wazne
+		printf("Dzien powinien byc z zakresu 0-31.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie trzeciego znaku 
+	if (getchar() != '.') { // wazne
+		printf("Trzeci znak powinien byc kropka.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie czwartego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Czwarty znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '1') { // wazne
+		printf("Czwarty znak powinien byc cyfra od 0 do 1.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	miesiac = znak - '0'; // wazne
+	// wczytywanie piatego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Piaty znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	miesiac = 10 * miesiac + (znak - '0'); // wazne
+	if (miesiac > 12) { // wazne
+		printf("Miesiac powinien byc z zakresu 0-12.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie szostego znaku
+	if (getchar() != '.') { // wazne
+		printf("Szosty znak powinien byc kropka.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// wczytywanie siodmego znaku (rok)
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Siodmy znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '9') { // wazne
+		printf("Siodmy znak powinien byc cyfra 2.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	rok = znak - '0'; // wazne
+	// wczytywanie osmego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Osmy znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '9') { // wazne
+		printf("Osmy znak powinien byc cyfra od 0 do 9.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	rok = 1000 * rok + 100 * (znak - '0'); // wazne
+	// wczytywanie dziewiatego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Dziewiaty znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '9') { // wazne
+		printf("dziewiaty znak powinien byc cyfra od 0 do 9.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	rok = rok + 10 * (znak - '0'); // wazne
+	// wczytywanie dziesiatego znaku
+	znak = getchar();
+	if (!isdigit(znak)) {
+		printf("Dziesiaty znak powinien byc cyfra.\nKoniec.\n");
+		return 0;
+	}
+	if (znak < '0' || znak > '9') { // wazne
+		printf("Dziesiaty znak powinien byc cyfra od 0 do 9.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	rok = rok + (znak - '0'); // wazne
+	if (rok < 2001 || rok > 2050) {
+		printf("Podana data nie miesci sie w zakresie lat 2001-2050.\nKoniec.\n");
+		return 0;
+	}
+	// wczytywanie jedenastego znaku
+	if (getchar() != '\n') { // wazne
+		printf("Trzeci znak powinien byc enterem.\n");
+		printf("\nKoniec programu.\n\n");
+		return 0;
+	}
+	// warunki dla dni w miesiacu
+	if (miesiac == 4 || miesiac == 6 || miesiac == 9 || miesiac == 11) {
+		if (dzien > 30) {
+			printf("Nie ma takiej daty. (Podany miesiac ma 30 dni).\nKoniec.\n");
+			return 0;
+		}
+	}
+	// warunki dla lat przestepnych
+	if (miesiac == 2) {
+		if ((rok % 4) == 0) {
+				if (dzien > 29) {
+					printf("Nie ma takiej daty. (Podany miesiac ma 29 dni.) \nKoniec.\n");
+					return 0;
+				}
+		}
+		else {
+			if (dzien > 28) {
+					printf("Nie ma takiej daty. (Podany miesiac ma 28 dni.) \nKoniec.\n");
+					return 0;
+			}
+		}
+	}
+	// wpisywanie daty
+	printf("Oto wczytana data\n%d ", dzien);
+	if (miesiac == 1) {
+		printf("stycznia");
+	}
+	else if (miesiac == 2) {
+		printf("lutego");
+	}
+	else if (miesiac == 3) {
+		printf("marca");
+	}
+	else if (miesiac == 4) {
+		printf("kwietnia");
+	}
+	else if (miesiac == 5) {
+		printf("maja");
+	}
+	else if (miesiac == 6) {
+		printf("czerwca");
+	}
+	else if (miesiac == 7) {
+		printf("lipca");
+	}
+	else if (miesiac == 8) {
+		printf("sierpnia");
+	}
+	else if (miesiac == 9) {
+		printf("wrzesnia");
+	}
+	else if (miesiac == 10) {
+		printf("pazdziernika");
+	}
+	else if (miesiac == 11) {
+		printf("lutego");
+	}
+	else if (miesiac == 12) {
+		printf("grudnia");
+	}
+	printf(" %d.\nKoniec.\n", rok);
+	return 0;
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 48                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+int main()
+{
+	printf("Program probuje wypisac na ekranie 50 poczatkowych poteg dwojki\nposlugujac sie zmiennymi typu int.\nAutor: Anna Prusakow.\n");
+	int potega = 1;			//aby program wyswietlal poprawnie wszystkie potegi 2 powinnismt zmienic typ na long long int
+	int i = 1;
+	while (i<=50) {
+		printf("%20d\n", 2*potega);	//aby program wyswietlal poprawnie wszystkie potegi 2 powinnismt zmienic typ na %lld
+		potega = 2 * potega;
+		i = i + 1;
+	}
+	printf("Koniec.\n");
+	return 0;
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 49                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program probuje probuje wypisac na ekranie wartosci 1!,2!,...,20! poslugujac sie zmiennymi typu int.\nAutor: Anna Prusakow.\n");		
+	int i = 1;
+	int wynik = 1;
+	while (i <= 20)	{
+		wynik = wynik * i;
+		i = i + 1;
+		printf("%d\n", wynik);
+		}
+	printf("Koniec.\n");
+	return 0;
+}
+*/
+
+/*===========================================================================*/
+/*                               ZADANIE 50                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <math.h>
+
+int main()
+{
+	printf("Program, ktory dla n = 1,2...,200 wypisuje wartosci funkcji\nf(n)=(3^n)/(n+1)!.\nAutor: Anna Prusakow.\n");
+	int n;
+	printf("Podaj n od 1 do 200: \n");
+	if (scanf_s("%d", &n) != 1 || getchar() != '\n' || n<0 || n>200) {
+		printf("Podales zle dane.\nKoniec.\n");
+		return 0;
+	}
+	int i = 1;
+	double wynik = n+1;
+	double pomoc = (n+1 - i);
+	while (i <= n+1) {
+		wynik *= pomoc;
+		i = i + i;
+	}
+	double gn = pow(3, n);
+	double hn = wynik;
+	double fn = gn / hn;
+	printf("F(%d)=%lf.\nKoniec.\n", n, fn);
+	return 0;
+}*/
+
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 51                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <math.h>
+int main()
+{
+	printf("Program, ktory znajduje najmniejsza l. nat. n,\ntaka, ze:\n(90^n)/(n+1)!<1.\nAutor: Anna Prusakow.\n");
+	
+	int n=1;
+	int i = 1;
+	double wynik = n+1;
+	double pomoc = (n + 1- i);
+	while (i <= n+1) {
+		wynik *= pomoc;
+		i = i + i;
+	}
+	double licznik = pow(90, n);
+	double mianownik = wynik;
+	double wartosc = licznik / mianownik;
+	printf("%lf\n", wartosc);
+	if (n < licznik / mianownik) {
+		printf("Najmniejsza l. naturalna spelniajaca te wartosc to %d.\nKoniec.\n", n);
+		return 0;
+	}
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 52                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o wpisanie linii tekstu\ni wypisuje ten tekst bez zbednych spacji.\nAutor: Anna Prusakow\n");
+	printf("Wypisz tekst: \n");
+	char c;			
+	while ((c=getchar())!='\n'){
+		if (c == ' ') {
+			putchar(c);
+		}
+		else {
+			putchar(c);
+		}
+
+	}
+	return 0;
+}*/
+/*===========================================================================*/
+/*                               ZADANIE 53                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie liczby naturalnej i\nrobi to tak dlugo, az dane beda poprawne\na nastepnie ja wypisuje na ekran.\nAutor: Anna Prusakow.\n");
+	printf("Podaj liczbe naturalna: \n");
+	int liczba;
+	while  (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+		printf("Bledne dane. Popraw: \n");
+		while (getchar() != '\n')
+			;
+	}
+	printf("Podales liczbe: %d.\nKoniec.\n", liczba);
+	return 0;  
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 54                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie litery t i\nrobi to tak dlugo, az dane beda poprawne\na nastepnie ja wypisuje na ekran.\nAutor: Anna Prusakow.\n");
+	printf("Wpisz t: \n");
+	char litera;
+	while (scanf_s("%c", &litera, 1)!=1 || litera != 't' && litera!= 'T' || getchar() != '\n') {
+		printf("Bledne dane. Popraw: \n");
+		while (getchar() != '\n')
+			;
+	}
+	printf("Podales poprawnie litere %c.\nKoniec.\n", litera);
+	return 0;
+}
+*/
+
+/*===========================================================================*/
+/*                               ZADANIE 55                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <limits.h>
+int main()
+{
+	printf("Program oblicza minimum z podanych liczb.\n");
+	printf("Autor: Anna Prusakow.\n");
+	printf("Podaj liczby naturalne. Aby zakonczyc wpisz 0: \n");
+	int liczba = 1; // wczytana liczba
+	int min = INT_MAX; // aktualne minimum
+	while (liczba != 0) {
+		// wczytaj liczbe
+		printf("Podaj liczbe: ");
+		while (scanf_s("%d", &liczba) != 1 || liczba < 0 || getchar() != '\n') {
+			printf("Bledne dane. Popraw: ");
+			while (getchar() != '\n')
+				;
+		}
+		// ewentualnie popraw aktualne minimum
+		if (liczba !=0 && liczba < min) {
+			min = liczba;
+		}
+	}
+	printf("Minimum podanych liczb to: %d\n", min);
+	printf("Koniec.\n\n");
+	return 0;
+
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 56                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program wczytuje 10 liczb zmiennopozycyjnych i wypisuje ich srednia arytmetyczna.\nAutor: Anna Prusakow\n");
+	printf("Podaj 10 liczb zmiennopozycyjnych.\n");
+	double liczba = 0.0;
+	double suma = 0.0;
+	int i = 1; 
+	while (i<=10) {
+		printf("Podaj liczbe: ");
+		while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+			printf("Bledne dane. Popraw: ");
+			while (getchar() != '\n')
+				;
+		}
+		suma = suma + liczba;
+		i++;
+	}
+	printf("Srednia arytmetyczna podanych liczb to: %lf\n", ((double)suma/(double)10));
+	printf("Koniec.\n\n");
+	return 0;
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 57                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <math.h>
+
+int main()
+{
+	printf("Program wczytuje ciag liczb calkowitych dodatnich i\nwypisuje ich srednia arytmetyczna i geomretryczna.\n");
+	printf("Gdy uzytkownik chce zakonczyc podawanie danych wpisuje 0.\nAutor: Anna Prusakow\n");
+	int liczba = 1; 
+	int iloczyn = 1;
+	int suma=0;
+	int i = 0;
+	while (liczba != 0) {
+		printf("Podaj liczbe: ");
+		while (scanf_s("%d", &liczba) != 1 || liczba < 0 || getchar() != '\n') {
+			printf("Bledne dane. Popraw: ");
+			while (getchar() != '\n')
+				;
+		}
+		if (liczba == 0) {
+			continue;
+		}
+		else {
+			iloczyn = liczba * iloczyn;
+			suma = suma + liczba;
+			i++;
+		}
+	}
+	i = i - 1;
+	printf("Srednia arytmetyczna podanych liczb: %lf\n", ((double)suma/(double)(i)));
+	printf("\nSrednia geometryczna podanych liczb: %lf\n", pow(iloczyn, (1.0/i)));
+	printf("Koniec.\n\n");
+	return 0;
+
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 58                                  */
+/*===========================================================================*/
+
+/*
+#include <stdio.h>
+#include <math.h>
+int main()
+{
+	printf("Program interpretuje ciag zer i jedynek wpisanych przez uzytkownika\njako reprezentacja liczby naturalnej w systemie dwojkowym i\n");
+	printf("wypisuje te liczbe w systemie dziesietnym.\nAutor: Anna Prusakow\n");
+	printf("Podaj liczbe calkowita nieujemna w systemie dwojkowym\n(ciag 0 i 1 nie dluzszy niz 32): \n");
+	long liczba;
+	double wynik = 0;
+	double reszta = 0;
+	int i = 0;
+	if (scanf_s("%ld", &liczba) != 1 || getchar() != '\n') {
+		printf("Podales bedne dane.\nKoniec\n");
+		return 0;
+	}
+	else {
+		while (liczba != 0) {
+			reszta = liczba % 10;
+			liczba = liczba / 10;
+			wynik = wynik + reszta * pow(2, i);
+			i++;
+
+		}
+	}
+	if (wynik < 0) {
+		printf("Podana liczba jest ujemna.\nKoniec.\n");
+		return 0;
+	}
+	else if (log10(wynik) + 1 > 32) {
+		printf("Podales ciag liczb dluzszy niz 32.\nKoniec.\n");
+		return 0;
+	}
+	else {
+		printf("Podana liczba wpisana w systemie dwojkowym wynosi: %.0lf w systemie dziesietnym.\nKoniec.\n", wynik);
+		return 0;
+	}
+}
+*/
+
+/*===========================================================================*/
+/*                               ZADANIE 59                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+
+int main()
+{
+	printf("Program wypisuje menu i wykonuje stosowne akcje,\nktore wybiera uzytkownik.\nAutor: Anna Prusakow\n");
+	printf("Wybierz operacje z menu: \n");
+	printf("\n0.Zakoncz program\n1. Wczytaj liczby\n2. Dodaj\n3. Odejmij\n4. Pomnoz\n5. Podziel.\n");
+
+	int wybor = 0;
+	int wybor2 = 0;
+	double liczba = 0;
+	double suma = 0;
+	double roznica = 0;
+	double iloczyn = 0;
+	double dzielenie = 0;
+
+	while (scanf_s("%d", &wybor) != 1 || (wybor < 0 || wybor>5) || getchar() != '\n') {
+		printf("\nPodales bledne dane. Ponow probe: \n");
+		while (getchar() != '\n')
+			;
+	}
+	if (wybor == 1) {
+		printf("Wczytaj liczbe: \n");
+		while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+			printf("\nPodales bledne dane. Ponow probe: \n");
+			while (getchar() != '\n')
+				;
+		}
+		suma = liczba;
+		roznica = liczba;
+		iloczyn = liczba;
+		dzielenie = liczba;
+		printf("Wczytaj liczbe: \n");
+		while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+			printf("\nPodales bledne dane. Ponow probe: \n");
+			while (getchar() != '\n')
+				;
+		}
+		suma = suma + liczba;
+		roznica = roznica - liczba;
+		iloczyn = iloczyn * liczba;
+		dzielenie = dzielenie / liczba;
+	}
+	else if (wybor == 0) {
+		printf("\nKoniec.\n");
+		return 0;
+	}
+	else if (wybor == 2) {
+		printf("\nSuma twoich liczb to: %lf\n", suma);
+
+	}
+	else if (wybor == 3) {
+		printf("\nRoznica twoich liczb to: %lf\n", roznica);
+
+	}
+	else if (wybor == 4) {
+		printf("\nIloczyn twoich liczb to: %lf\n", iloczyn);
+
+	}
+	else if (wybor == 5) {
+		printf("\nWynik dzielenia twoich liczb to: %lf\n", dzielenie);
+	}
+	while (wybor2 <= 5) {
+		printf("\nChcesz kontynuowac?\n");
+		printf("\n0.Zakoncz program\n1. Wczytaj liczby\n2. Dodaj\n3. Odejmij\n4. Pomnoz\n5. Podziel.\n");
+		while (scanf_s("%d", &wybor) != 1 || (wybor < 0 || wybor>5) || getchar() != '\n') {
+			printf("Podales bledne dane. Ponow probe: \n");
+			while (getchar() != '\n')
+				;
+		}
+		if (wybor == 1) {
+			printf("Wczytaj liczbe: \n");
+			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+				printf("Podales bledne dane. Ponow probe: \n");
+				while (getchar() != '\n')
+					;
+			}
+			suma = liczba;
+			roznica = liczba;
+			iloczyn = liczba;
+			dzielenie = liczba;
+			printf("Wczytaj liczbe: \n");
+			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+				printf("Podales bledne dane. Ponow probe: \n");
+				while (getchar() != '\n')
+					;
+			}
+			suma = suma + liczba;
+			roznica = roznica - liczba;
+			iloczyn = iloczyn * liczba;
+			dzielenie = dzielenie / liczba;
+		}
+		else if (wybor == 0) {
+			printf("\nKoniec.\n");
+			return 0;
+		}
+		else if (wybor == 2) {
+			printf("\nSuma twoich liczb to: %lf\n", suma);
+
+		}
+		else if (wybor == 3) {
+			printf("\nRoznica twoich liczb to: %lf\n", roznica);
+
+		}
+		else if (wybor == 4) {
+			printf("\nIloczyn twoich liczb to: %lf\n", iloczyn);
+
+		}
+		else if (wybor == 5) {
+			printf("\nWynik dzielenia twoich liczb to: %lf\n", dzielenie);
+		}
+	}
+}*/
+/*===========================================================================*/
+/*                               ZADANIE 60                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//#include<math.h>
+//
+//int main()
+//{
+//	printf("Program oblicza pole trojkata.\nAutor:Anna Prusakow\n");
+//	printf("Przez podanie jakich danych program ma obliczyc pole?\n");
+//	printf("1.Bok i spuszczona na nim wysokosc\n2.Dwa boki i kat miedzy nimi\n3.Trzy boki.\n4.Zakoncz pogram.\n");
+//	int wybor;
+//	while (scanf_s("%d", &wybor) != 1 || wybor != 1 && wybor != 2 && wybor != 3 && wybor != 4 || getchar() != '\n') {
+//		printf("Podales zle dane.\Popraw: \n");
+//		while (getchar() != '\n') {
+//			;
+//		}
+//	}
+//	while (wybor) {
+//		while (wybor == 1) {
+//			printf("Podaj dlugosc boku: \n");
+//			double bok;
+//			while (scanf_s("%lf", &bok) != 1 || bok <= 0 || getchar() != '\n') {
+//				printf("Podales zle dane.\Popraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			printf("Podaj dlugosc wysokosci: \n");
+//			double wysokosc;
+//			while (scanf_s("%lf", &wysokosc) != 1 || wysokosc <= 0|| getchar() != '\n' ) {
+//				printf("Podales zle dane.\Popraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			printf("Pole trojkata o boku %lf i wysokosci %lf wynosi: %lf", bok, wysokosc, (bok * wysokosc) / 2);
+//			break;
+//		}
+//
+//
+//		while (wybor == 2) {
+//			printf("Podaj dlugosc jednego boku: ");
+//			double bok1;
+//			while (scanf_s("%lf", &bok1) != 1 || bok1 <= 0 || getchar() != '\n') {
+//				printf("Podales zle dane.\nPopraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			printf("Podaj dlugosc drugiego boku: ");
+//			double bok2;
+//			while (scanf_s("%lf", &bok2) != 1 || bok2 <= 0 || getchar() != '\n') {
+//				printf("Podales zle dane.\nPopraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			printf("\nChcesz podac kat w:\n1.Stopniach\n2.Radianach?\n");
+//			int wybor2;
+//			double kat;
+//			double pi = 3.1415926535;
+//			while (scanf_s("%d", &wybor2) != 1 || wybor2 != 1 && wybor2 != 2 || getchar() != '\n') {
+//				printf("Podales zle dane.\nPopraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//
+//			while (wybor2 == 1) {
+//				printf("Podaj wartosc kata miedzy nimi w stopniach: \n");
+//				while (scanf_s("%lf", &kat) != 1 || getchar() != '\n') {
+//					printf("Podales zle dane.\nPopraw: \n");
+//					while (getchar() != '\n') {
+//						;
+//					}
+//				}
+//				while (((kat * (pi / 180.0)) >= pi) || (kat <= 0)) {
+//					printf("Podales zle dane.\nPopraw: \n");
+//					while (getchar() != '\n') {
+//						;
+//					}
+//				}
+//
+//				printf("Pole trojka o bokach: %lf, %lf i kacie %lf miedzy nimi wynosi: %lf", bok1, bok2, kat, ((bok1 * bok2 * sin(kat * pi / 180)) / 2));
+//				break;
+//			}
+//			while (wybor2 == 2) {
+//				printf("Podaj wartosc kata miedzy nimi w radianach: \n");
+//				while (scanf_s("%lf", &kat) != 1 || getchar() != '\n') {
+//					printf("Podales zle dane.\nPopraw: \n");
+//					while (getchar() != '\n') {
+//						;
+//					}
+//				}
+//				while ((kat >= pi) || (kat <= 0)) {
+//					printf("Podales zle dane.\nPopraw: \n");
+//					while (getchar() != '\n') {
+//						;
+//					}
+//				}
+//				printf("Pole trojka o bokach: %lf, %lf i kacie %lf miedzy nimi wynosi: %lf", bok1, bok2, kat, ((bok1 * bok2 * sin(kat)) / 2));
+//				break;
+//			}
+//			break;
+//		}
+//
+//
+//		while (wybor == 3) {
+//			double bok1_wybor3;
+//			double bok2_wybor3;
+//			double bok3_wybor3;
+//			printf("Podaj dlugosc najwiekszego boku: ");
+//			while (scanf_s("%lf", &bok1_wybor3) != 1 || bok1_wybor3 <= 0 || getchar() != '\n') {
+//				printf("Podales zle dane.\nPopraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			printf("\nPodaj dlugosc drugiego boku: ");
+//			while (scanf_s("%lf", &bok2_wybor3) != 1 || bok2_wybor3 <= 0 || getchar() != '\n') {
+//				printf("Podales zle dane.\nPopraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			printf("\nPodaj dlugosc trzeciego boku: ");
+//			while (scanf_s("%lf", &bok3_wybor3) != 1|| getchar() != '\n') { 
+//				printf("Podales zle dane.\nPopraw: \n");
+//				while (getchar() != '\n') {
+//					;
+//				}
+//			}
+//			if (bok2_wybor3 + bok2_wybor3 < bok1_wybor3) {
+//				printf("Podane boki nie tworza trojkata.\nPopraw: \n");
+//				continue;
+//			}
+//				double p = (bok1_wybor3 + bok2_wybor3 + bok3_wybor3) / 2;
+//				printf("Pole trojkata o podanych bokach: %lf, %lf, %lf wynosi: %lf", bok1_wybor3, bok2_wybor3, bok3_wybor3, sqrt(p * (p - bok1_wybor3) * (p - bok2_wybor3) * (p - bok3_wybor3)));
+//			break;
+//		}
+//
+//
+//		if (wybor == 4) {
+//			printf("Koniec.\n");
+//			return 0;
+//		}
+//
+//		printf("\nChcesz kontyuowac?\n");
+//		printf("1.Bok i spuszczona na nim wysokosc\n2.Dwa boki i kat miedzy nimi\n3.Trzy boki.\n4.Zakoncz pogram.\n");
+//		while (scanf_s("%d", &wybor) != 1 || wybor != 1 && wybor != 2 && wybor != 3 && wybor != 4 || getchar() != '\n') {
+//			printf("Podales zle dane.\Popraw: \n");
+//			while (getchar() != '\n') {
+//				;
+//			}
+//			continue;
+//		}
+//	}
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 61                                  */
+/*===========================================================================*/
+
+/*
+//zle wykonane, nie wiem jak zrobic
+#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+	printf("Program prosi uzytkownika o podanie godziny w formacie hh:mm,\na nastepnie sprawdza poprawnosc wprowadzonych danych\noraz wypisuje informacje podane przez uzytkownika.\n");
+	printf("Autor: Anna Prusakow.\n");
+	printf("Podaj godzine w formacie hh:mm: \n");
+	int godz = 0; // wczytana godzina, zakres 0 - 23
+	int min = 0; // wczytane minuty, zakres 0 - 59
+	char znak; // wczytany znak, kolejno znajda sie tu wszystkie znaki
+	//wczytywanie pierwszego znaku
+	znak = getchar();
+	while (znak) {
+		while (!isdigit(znak)) {
+			printf("Pierwszy znak powinien byc cyfra.\nPopraw: \n");
+			while (getchar() != '\n') {
+				;
+			}
+			znak = getchar();
+		}
+		while (znak < '0' || znak > '2') { // wazne
+			printf("Pierwszy znak powinien byc cyfra 0, 1, 2.\n");
+			printf("\nPopraw: \n\n");
+			while (getchar() != '\n') {
+				;
+			}
+			znak = getchar();
+		}
+		if (isdigit(znak) && (znak == 0 || znak == 1 || znak == 2)) {
+			godz = znak - '0'; // wazne, bez tego kompilator pokazuje, ze godzina powinna byc z zakresu (0-23)
+			// wczytywanie drugiego znaku
+		}
+	}
+	znak = getchar();
+	while (!isdigit(znak)) {
+		printf("Drugi znak powinien byc cyfra.\nPopraw: \n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+	godz = 10 * godz + (znak - '0'); // wazne
+	if (godz > 23) { // wazne
+		printf("Godzina powinna byc z zakresu 0-23.\n");
+		printf("\nPopraw: \n\n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+	// wczytywanie trzeciego znaku 
+	while (getchar() != ':') { // wazne
+		printf("Trzeci znak powinien byc dwukropiem.\n");
+		printf("\nPopraw: \n\n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+	// wczytywanie czwartego znaku
+	znak = getchar();
+	while (!isdigit(znak)) {
+		printf("Czwarty znak powinien byc cyfra.\Popraw: \n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+	while (znak < '0' || znak > '5') { // wazne
+		printf("Czwarty znak powinien byc cyfra od 0 do 5.\n");
+		printf("\nPopraw: \n\n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+	min = znak - '0'; // wazne
+	// wczytywanie piatego znaku
+	znak = getchar();
+	while (!isdigit(znak)) {
+		printf("Piaty znak powinien byc cyfra.\n");
+		printf("\nPopraw: \n\n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+	min = 10 * min + (znak - '0'); // wazne
+	while (min > 59) { // wazne
+		printf("Godzina powinna byc z zakresu 0-59.\n");
+		printf("\nPopraw: \n\n");
+		while (getchar() != '\n') {
+			;
+		}
+		continue;
+	}
+	// wczytywanie szostego znaku
+	while (getchar() != '\n') { // wazne
+		printf("Szosty znak powinien byc enterem.\n");
+		printf("\nPopraw: \n\n");
+		while (getchar() != '\n') {
+			;
+		}
+		znak = getchar();
+		continue;
+	}
+}
+	//wypisywanie godziny
+	printf("Oto wczytana godzina:\n%d ", min);
+	if (min==1){
+		printf("minuta");
+	}
+	else if (min > 10 && min < 19) {
+		printf("minut");
+	}
+	else if ((min%10)>= 2 && (min%10) <= 4) {
+		printf("minuty");
+	}
+	else {
+		printf("minut");
+	}
+	printf(" po %d.\nKoniec.\n", godz);
+	return 0;
+}*/
+
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 62                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+	printf("Program wczytuje imie i wypisuje je, przeprowadza kontrole poprawnosci.\n");
+	printf("Autor: Anna Prusakow\n\n");
+	printf("\nJak masz na imie?\n");
+	enum { PIERWSZY, KOLEJNY, BLAD, KONIEC } stan = PIERWSZY;
+	while (stan != KONIEC) {
+		char znak = getchar();
+		switch (stan) {
+		case PIERWSZY:
+			if (isupper(znak)) {
+				stan = KOLEJNY;
+				printf("\nMasz na imie %c", znak);
+			}
+			else if (islower(znak)) {
+				printf("Imie nalezy pisac wielka litera.\n");
+				stan = BLAD;
+			}
+			else if (!isalpha(znak) && ('\n' != znak)) {
+				printf("Imie sklada sie tylko z liter.\n");
+				stan = BLAD;
+			}
+			break;
+		case KOLEJNY:
+			if ('\n' == znak) {
+				stan = KONIEC;
+			}
+			else if (isupper(znak)) {
+				printf("...?\nPoza pierwsza litera wszystkie powinny byc male.\n");
+				stan = BLAD;
+			}
+			else if (!islower(znak)) {
+				printf("...?\nImie sklada sie tylko z liter.\n");
+				stan = BLAD;
+			}
+			else {
+				putchar(znak);
+			}
+			break;
+		case BLAD:
+			if ('\n' == znak) {
+				stan = PIERWSZY;
+				printf("\nJak masz na imie?\n");
+			}
+			break;
+		}
+	}
+}*/
+/*===========================================================================*/
+/*                               ZADANIE 63                                  */
+/*===========================================================================*/
+
+
+/*#include <stdio.h>
+#include <math.h>
+#define POCZ 0.0 //poczatek przedzialu
+#define KON 0.125 //koniec przedzialu
+#define ILE 33 //liczba punktow
+int main() {
+	double krok = (KON - POCZ) / (ILE - 1);//odl. miedzy pkt.
+	int i = 0;
+	printf("Program oblicza bledy przyblizenia");
+	printf(" funkcji sin(x) przez x\ndla %d", ILE);
+	printf(" rownoodleglych punktow z przedzial");
+	printf("u [%.g,%g].\n\n%-14s", POCZ, KON, "x");
+	printf("%-13s%-12s", "sin(x)", "x - sin(x)");
+	printf("%-12s\n", "|((x - sin(x)) / x)|");
+	while (i <= ILE) {
+		double x = POCZ + i * krok;
+		double sin_x = sin(x);
+		double bl_b = x - sin_x;
+		double bl_w = x != 0.0 ? fabs(bl_b / x) : -1.0;
+		printf("\n%11.9f%14.9f%12.3e", x, sin_x, bl_b);
+		if (bl_w!= -1.0)
+			printf("%12.3e", bl_w);
+		i++;
+	}
+	printf("\n\nKoniec programu.\n");
+}*/
+
+/*#include <stdio.h>
+#include <math.h>
+#define POCZ 0.0 //poczatek przedzialu
+#define KON 0.125 //koniec przedzialu
+#define ILE 33 //liczba punktow
+int main() {
+	double krok = (KON - POCZ) / (ILE - 1);//odl. miedzy pkt.
+	int i = 0;
+	printf("Program oblicza bledy przyblizenia");
+	printf(" funkcji sin(x) przez x\ndla %d", ILE);
+	printf(" rownoodleglych punktow z przedzial");
+	printf("u [%.g,%g].\n\n%-14s", POCZ, KON, "x");
+	printf("%-13s%-12s", "sin(x)", "x - sin(x)");
+	printf("%-12s\n", "|((x - sin(x)) / x)|");
+	for (i; i <= ILE; i++) {
+		double x = POCZ + i * krok;
+		double sin_x = sin(x);
+		double bl_b = x - sin_x;
+		double bl_w = x != 0.0 ? fabs(bl_b / x) : -1.0;
+		printf("\n%11.9f%14.9f%12.3e", x, sin_x, bl_b);
+		if (bl_w != -1.0)
+			printf("%12.3e", bl_w);
+	}
+	printf("\n\nKoniec programu.\n");
+}*/
+
+
+/*===========================================================================*/
+/*                               ZADANIE 64                                  */
+/*===========================================================================*/
+
+/*
+#include <stdio.h>
+#include <limits.h>
+int main()
+{
+	printf("Program probuje wypisac 10 kolejnych liczb naturalnych\nzaczynajac od INT_MAX-5, poslugujac sie jedyniezmiennymi typu int.\n");
+	printf("Autor: Anna Prusakow\n");
+	int liczba= (INT_MAX - 5);
+	int i = 1;
+	for (liczba; i <= 10; i++) {
+		printf("%d\n", liczba);
+		liczba = liczba + 1;
+	}
+}
+*/
+
+/*===========================================================================*/
+/*                               ZADANIE 65                                  */
+/*===========================================================================*/
+/*
+#include <stdio.h>
+int main()
+{
+	printf("Program wypisuje na ekranie n poczatkowych poteg dwojki,\nliczbe n podaje uzytkownik.\nAutor: Anna Prusakow.\n");
+	printf("Podaj liczbe naturalna n: ");
+	long long int n=1;
+	while (scanf_s("%lld", &n) != 1 || n <= 0 || getchar() != '\n') {
+		printf("Podales zle dane.\nPopraw: \n");
+		while (getchar() != '\n') {
+			;
+		}
+	}
+	int i = 1;
+	long long int potega = 1;
+	for (potega; i <= n; i++) {
+		printf("%20lld\n", 2*potega);	
+		potega = 2 * potega;
+	}
+	printf("Koniec.\n");
+	return 0;
+}
+*/
+
+/*===========================================================================*/
+/*                               ZADANIE 66                                  */
+/*===========================================================================*/
+
+
+/*
+#include <stdio.h>
+
+int main()
+{
+	printf("Program wczytuje 10 liczb zmiennopozycyjnych i wypisuje ich srednia arytmetyczna.\nAutor: Anna Prusakow\n");
+	printf("Podaj 10 liczb zmiennopozycyjnych.\n");
+	double liczba = 0.0;
+	double suma = 0.0;
+	int i = 1;
+	for (suma; i <= 10; i++) {
+		printf("Podaj liczbe: ");
+		while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+			printf("Bledne dane. Popraw: ");
+			while (getchar() != '\n')
+				;
+		}
+		suma = suma + liczba;
+	}
+	printf("Srednia arytmetyczna podanych liczb to: %lf\n", ((double)suma / (double)10));
+	printf("Koniec.\n\n");
+	return 0;
+}*/
+/*===========================================================================*/
+/*                               ZADANIE 67                                  */
+/*===========================================================================*/
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program rysuje na ekranie tyle gwiazdek w jednej linii, ile zazyczy sobie uzytkownik.\nAutor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//	int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void rysuj_linie(int m)
+//{
+//	for (int i = 0; i < m; ++i) { // rysowanie m gwiazdek
+//		putchar('*');
+//	}
+//	putchar('\n'); // rysowanie entera
+//}
+//
+//main()
+//{
+//	info();	 //info
+//	int n; // liczba gwiazdek
+//	printf("Podaj ilosc gwiazdek w jednej linii:\t"); 	// wczytanie liczby gwiazdek
+//	n = wczytaj_naturalna();
+//	// narysowanie 1 linii
+//	printf("\nLinia zlozona z %d gwiazd%s:\n\n", n, n == 1 ? "ki" : "ek");
+//	rysuj_linie(n);
+//	printf("\n\nKoniec programu.\n");
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 68                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program rysuje na ekranie kwadrat z gwiazdek w ilosci, jakiej zazyczy sobie uzytkownik.\nAutor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//	int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void rysuj_linie(int m)
+//{
+//	for (int i = 0; i < m; ++i) { // rysowanie m gwiazdek
+//		putchar('*');
+//	}
+//}
+//void rysuj_kwadrat(int m)
+//{
+//	
+//	for (int i = 0; i < m; ++i) { // rysowanie m gwiazdek
+//		rysuj_linie(m);
+//		putchar('\n');
+//	}
+//	
+//}
+//
+//main()
+//{
+//	info();	 //info
+//	int n; // liczba gwiazdek w jednej linii
+//	printf("Podaj ilosc gwiazdek w jednej linii:\t"); 	// wczytanie liczby gwiazdek
+//	n = wczytaj_naturalna();
+//	// narysowanie kwadratu
+//	printf("\nKwadrat zlozony z %d gwiazd%s:\n\n", n*n, n == 1 ? "ki" : "ek");
+//	rysuj_kwadrat(n);
+//	printf("\n\nKoniec programu.\n");
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 69                                  */
+/*===========================================================================*/
+
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program rysuje na ekranie prostokat z gwiazdek o szerokosci dwa razy mniejszej od dlugości, jakiej zazyczy sobie uzytkownik.\nAutor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//	int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void rysuj_rzedy(int m)
+//{
+//	for (int i = 0; i < m; ++i) { // rysowanie m gwiazdek
+//		putchar('*');
+//	}
+//}
+//void rysuj_prostokat(int m)
+//{
+//	for (int i = 0; i < m; ++i) { // rysowanie m*2 gwiazdek
+//		rysuj_rzedy(m*2);
+//		putchar('\n');
+//	}
+//
+//}
+//
+//main()
+//{
+//	info();	 //info
+//	int n; // liczba rzedow
+//	printf("Podaj ilosc rzedow:\t"); 	// wczytanie liczby rzedow
+//	n = wczytaj_naturalna();
+//	printf("\nProstokat o %d rzed%s:\n\n", n, n == 1 ? "zie" : n == 2 ? "ow" : "ach");
+//	rysuj_prostokat(n);
+//	printf("\n\nKoniec programu.\n");
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 70                                  */
+/*===========================================================================*/
+
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program rysuje na ekranie Napisz program, ktory rysuje na ekranie gwiazdki ulozone w trojkat\n");
+//	printf("rozpoczynajacy sie od lewej strony. Liczbe rzedow podaje uzytkownik.\nAutor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//	int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void rysuj_rzedy(int m)
+//{
+//	for (int i = 0; i<m; ++i) { // rysowanie m rzedow
+//		putchar('*');
+//	}
+//}
+//void rysuj_trojkat(int m)
+//{
+//	for (int i = 0; i < m; ++i) { // rysowanie trojkata
+//		rysuj_rzedy((m-(m-1)) + i);
+//		putchar('\n');
+//	}
+//
+//}
+//
+//main()
+//{
+//	info();	 //info
+//	int n; // liczba rzedow
+//	printf("Podaj ilosc rzedow:\t"); 	// wczytanie liczby rzedow
+//	n = wczytaj_naturalna();
+//	printf("\nTrojkat o %d rzed%s:\n\n", n, n == 1 ? "zie" : "ach");
+//	rysuj_trojkat(n);
+//	printf("\n\nKoniec programu.\n");
+//}
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 71                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program rysuje na ekranie gwiazdki ulozone w trojkat\n");
+//	printf("Liczbe rzedow podaje uzytkownik.\nAutor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//	int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void rysuj_spacje(int m)
+//{
+//	for (int i = 0; i<m; ++i) { // rysowanie m rzedow
+//		putchar(' ');
+//	}
+//}
+//void rysuj_rzedy(int m)
+//{
+//	for (int i = 0; i<m; ++i) { // rysowanie m rzedow
+//		putchar('*');
+//	}
+//}
+//void rysuj_trojkat(int m)
+//{
+//	for (int i = 0; i < m; ++i) { // rysowanie trojkata
+//		rysuj_spacje(m-i);
+//		rysuj_rzedy(((m-(m-1)) + i)+i);
+//		rysuj_spacje(m+i);
+//		putchar('\n');
+//	}
+//
+//}
+//
+//main()
+//{
+//	info();	 //info
+//	int n; // liczba rzedow
+//	printf("Podaj ilosc rzedow:\t"); 	// wczytanie liczby rzedow
+//	n = wczytaj_naturalna();
+//	printf("\nTrojkat o %d rzed%s:\n\n", n, n == 1 ? "zie" : "ach");
+//	rysuj_trojkat(n);
+//	printf("\n\nKoniec programu.\n");
+//}
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 72                                  */
+/*===========================================================================*/
+
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program rysuje na ekranie tabliczke mnozenia w zakresie do 15.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//	int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || liczba>15 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void rysuj_ramke(int m)
+//{
+//	printf("%4s", " ");
+//		for (int i = 0; i < m; ++i) { // rysowanie m liczb
+//			printf("%4d", (m - (m - 1)) + i);
+//		}
+//	putchar('\n');
+//		for (int i = 0; i < 5*m; ++i) { //rysowanie myslnikow
+//			putchar('-');
+//		}
+//	putchar('\n');
+//		for (int i = 1; i <= m; ++i) { // rysowanie m kolumn
+//			printf("%2d%2s", i, " |");
+//			for (int j = 1; j <= m; ++j) { // rysowanie  rzedow
+//				printf("%4d", j * i);
+//			}
+//			putchar('\n');
+//		}
+//	putchar('\n');
+//}
+//
+//
+//main()
+//{
+//	info();	 //info
+//	int n; // zakres
+//	printf("Podaj zakres:\t"); 	// wczytanie zakresu
+//	n = wczytaj_naturalna();
+//	printf("\nTabliczka mnozenia o zakresie %d:\n\n", n);
+//	rysuj_ramke(n);
+//	printf("\n\nKoniec programu.\n");
+//}
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 73                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//void info(void)
+//{
+//	printf("Program wypisuje tabele znakow odpowiadajacych kolejnym kodom ASCII (kody od 0 do 255).\n");
+//	printf("Ponizsze znaki kontrolne powinny byc przedstawione symbolicznie.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//void skroty(int m) {
+//	for (m = 1; m <= 255; ++m) {
+//		if (m == 0)
+//			printf("%20d%24s\n", 0, "nul");
+//		else if (m == 7)
+//			printf("%20d%24s\n", 7, "bel");
+//		else if (m == 8)
+//			printf("%20d%24s\n", 8, "bs");
+//		else if (m == 9)
+//			printf("%20d%24s\n", 9, "ht");
+//		else if (m == 10)
+//			printf("%20d%24s\n", 10, "nl");
+//		else if (m == 11)
+//			printf("%20d%24s\n", 11, "vt");
+//		else if (m == 12)
+//			printf("%20d%24s\n", 12, "np");
+//		else if (m == 13)
+//			printf("%20d%24s\n", 13, "cr");
+//		else if (m == 26)
+//			printf("%20d%24s\n", 26, "eof");
+//		else if (m == 27)
+//			printf("%20d%24s\n", 27, "esc");
+//		else if (m == 127)
+//			printf("%20d%24s\n", 127, "del");
+//		else
+//			printf("%20d%24c\n", m, m);
+//	}
+//}
+//int main(){
+//	info();
+//	int m = 0;
+//	printf("%20s%24s\n", "kod", "symbol/skrot");
+//	skroty(m);
+//	return 0;
+//}
+/*===========================================================================*/
+/*                               ZADANIE  74                                 */
+/*===========================================================================*/
+// #include <stdio.h>
+//void info(void)
+//{
+//	printf("Program wypisuje sume liczb o dlugosci podanej przez uzytkownika.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_naturalna(void)
+//{
+//int liczba;
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 && liczba >9 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int main() {
+//	info();
+//	int n;
+//	int suma = 0;
+//	printf("Podaj dlugosc sumy (nie wieksza niz 9): ");
+//	n = wczytaj_naturalna();
+//	for (int i = 1; i <= n; ++i) {		// wypisywanie dzialan
+//		int liczba = 0;
+//		if (i == 1);
+//		else {
+//			printf(" + ");
+//		}
+//		for (int j = 1; j <= i; ++j) {	//zmienianie wartosci liczby
+//			liczba = liczba * 10 + i;
+//		}
+//		printf("%d", liczba);
+//		suma = liczba + suma;			//obliczanie sumy
+//	}
+//	printf(" = %d\n\n", suma);
+//	printf("Koniec programu\n");
+//
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 75                                  */
+/*===========================================================================*/
+
+//#include <stdio.h>
+//
+//#define ILE 10			//ilosc pobranych liczb
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program prosi uzytkownika o podanie 10 liczb, a nastpenie wypisuje je od konca.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void wczytaj_int_1W(int tab[], int n) {		//wpisuje liczbe podana przez uzytkownika do tablicy
+//	for (int i = 0; i < n; ++i) {
+//		printf("liczba %d:\t", i + 1);
+//		tab[i] = wczytaj_int();
+//	}
+//}
+//void wypisz_liczby(int tab[], int n) {		//wypisuje liczby w dwoch kolejnosciach
+//	printf("Podane liczby w odpowiedniej kolejnosci: ");
+//	for (int i = 0; i < n; ++i) {
+//		if (i == n - 1) {
+//			printf("%d", tab[i]);
+//		}
+//		else {
+//			printf("%d, ", tab[i]);
+//		}
+//	}
+//	putchar('.');
+//	printf("\n\nPodane liczby w kolejnosci od konca: ");
+//	for (int i = n - 1; i >= 0; --i) {
+//		if (i == 0) {
+//			printf("%d", tab[i]);
+//		}
+//		else {
+//			printf("%d, ", tab[i]);
+//		}
+//	}
+//	putchar('.');
+//}
+//
+//int main()
+//{
+//	int n[ILE];
+//	info();
+//	wczytaj_int_1W(n, ILE);
+//	wypisz_liczby(n, ILE);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 76                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//#define ILE 100
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Programy wyznacza iloczyn oraz sume niezerowych elementow ciagu n elementowego (n podaje uzytkownik, n<=100).\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 && liczba < 100 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void wczytaj_int_1W(int tab[], int n) {		//wpisuje liczbe podana przez uzytkownika do tablicy
+//	for (int i = 0; i < n; ++i) {
+//		printf("liczba %d:\t", i + 1);
+//		tab[i] = wczytaj_int();
+//	}
+//}
+//void oblicz_sume(int tab[], int n) {		//oblicza sume liczb z tablicy
+//	int suma = 0;
+//	for (int i = 0; i < n; ++i) {
+//		suma = tab[i] + suma;
+//	}
+//	printf("Suma podanych elementow %d elementowego ciagu: %d\n", n, suma);
+//}
+//void oblicz_iloczyn(int tab[], int n) {		//oblicza iloraz liczb z tablicy
+//	double iloczyn = 1;
+//	for (int i = 0; i < n; ++i) {
+//		iloczyn = iloczyn * tab[i];
+//
+//	}
+//	printf("Iloczyn podanych elementow %d elementowego ciagu: %.2lf\n", n, iloczyn);
+//}
+//int main()
+//{
+//	info();
+//	printf("Podaj liczbe n: ");
+//	int n=wczytaj_int();
+//	int tab[ILE];
+//	wczytaj_int_1W(tab, n);
+//	oblicz_sume(tab, n);
+//	oblicz_iloczyn(tab, n);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+//
+//#include <stdio.h>
+//
+//int main()
+//{
+//	printf("Programy wyznacza iloczyn oraz sume niezerowych elementow ciagu n elementowego (n podaje uzytkownik).\n");
+//	printf("Autor: Anna Prusakow\n");
+//	printf("Podaj liczbe n: ");
+//	int n; 
+//	while (scanf_s("%d", &n) != 1 || n <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	int suma = 0;
+//	double iloczyn = 1;
+//	for (int i = 0; i < n; ++i) {
+//		int liczba;
+//		printf("liczba %d:\t", i + 1);
+//		while (scanf_s("%d", &liczba) != 1 || liczba <= 0 || getchar() != '\n') {
+//			printf("Bledne dane. Popraw:\t\t");
+//			while (getchar() != '\n')
+//				;
+//		}
+//		suma = suma + liczba;
+//		iloczyn = iloczyn * liczba;
+//	}
+//	printf("Suma podanych elementow %d elementowego ciagu: %d\n", n, suma);
+//	printf("Iloczyn podanych elementow %d elementowego ciagu: %lf\n", n, iloczyn);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 77                                  */
+/*===========================================================================*/
+
+
+
+//#include <stdio.h>
+//#include <math.h>
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program sposrod liczb trzycyfrowych wypisuje te, ktore sa rowne sumie szescianow swoich cyfr.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//
+//void wczytaj_int_1W(int tab[], int n, int setki, int dziesiatki, int jednosci) {
+//	setki = 1;
+//	dziesiatki = 0;
+//	jednosci = 0;
+//	int j=1;
+//	n = setki*100 + dziesiatki*10 + jednosci;
+//	for (int i = 0; i < n; ++i) {
+//		tab[i] = n;
+//		++jednosci;
+//		if (i == j*10) {
+//			++dziesiatki;
+//			jednosci = 0;
+//			j = j * 10;
+//		}
+//		if(i==j*100){
+//			++setki;
+//			j = j * 100;
+//		}
+//		if ((pow(3, setki) + pow(3, dziesiatki) + pow(3,jednosci)) == tab[i]) {
+//			printf("%d", n);
+//		}
+//	}
+//}
+//int main()
+//{
+//	info();
+//	int n = 100;
+//	int setki=1;
+//	int dziesiatki=0;
+//	int jednosci=0;
+//	int tab[899];
+//	wczytaj_int_1W(tab, n, setki, dziesiatki, jednosci);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+/*===========================================================================*/
+/*                               ZADANIE 78                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//#define ILE 20
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program oblicza n wyrazow cigu Fibbonaciego i wypisuje je od najwiekszej do najmniejszej. (n podaje uzytkownik, n<=20).\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba
+//	while (scanf_s("%d", &liczba) != 1 || liczba <= 0 && liczba > 20 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//int fibonacci(int n){
+//	if (n <= 1) {
+//	return n;
+//	}
+//	return fibonacci(n - 1) + fibonacci(n - 2);
+//}
+//void wczytaj_do_tab(int tab[], int n) {		//wpisuje ciag do tablicy
+//	for (int i = 0; i < n; ++i) {
+//		tab[i] = fibonacci(i);
+//	}
+//}
+//
+//void wypisz_liczby(int tab[], int n) {		//wypisuje liczby
+//	printf("Podane liczby w odpowiedniej kolejnosci: ");
+//	for (int i = n - 1; i >= 0; --i) {
+//		if (i == 0) {
+//			printf("%d", tab[i]);
+//		}
+//		else {
+//			printf("%d, ", tab[i]);
+//		}
+//	}
+//	putchar('.');
+//}
+//
+//int main()
+//{
+//	info();
+//	printf("Podaj liczbe n: ");
+//	int n=wczytaj_int();
+//	int tab[ILE];
+//	wczytaj_do_tab(tab, n);
+//	wypisz_liczby(tab, n);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 79                                  */
+/*===========================================================================*/
+
+
+//
+//#include <stdio.h>
+//#include <limits.h>
+//#define ILE 10
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program wczytuje 10 liczb calkowitych i wypisuje je w kolejnosci od najmniejszej do najwiekszej.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//
+//
+//
+//
+//int wczytaj_int(void)	//wczytuje liczbe podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//
+//void wczytaj_tab(int tab[], int n) {		//wpisuje liczby podane przez uzytkownika do tablicy 
+//	for (int i = 0; i < n; ++i) {
+//		printf("Podaj liczbe %d: \t", i+1);
+//		tab[i] = wczytaj_int();
+//	}
+//}
+//void sortuj(int tab[], int n)
+//{
+//		for (int k = 0; k <= n - 2; ++k) {
+//			for (int j=0; tab[k] < tab[j]; ++j) {
+//				int min = tab[k];
+//			}// znalezienie minimum w czesci tablicy od elementu k-tego do ostatniego
+//			int min = tab[k]; // aktualne minimum
+//			int gdzie = k; // indeks, pod ktorym znajduje sie aktualne minimum
+//			for (int i = 0; i < n-2; ++i) {
+//				if (tab[i]<min) {
+//					min = tab[i];
+//					gdzie = i;
+//				}
+//			}
+//			// dokonanie zamiany znalezionego minimum z elementem k-tym
+//			int pom = tab[k];
+//			tab[k] = tab[n];
+//			tab[n] = pom;
+//		}
+//	}
+////
+//
+//void wypisz_liczby(int tab[], int n) {		//wypisuje liczby
+//	printf("Podane liczby w odpowiedniej kolejnosci: ");
+//	for (int i = 0; i < n; ++i) {
+//		if (i == n - 1) {
+//			printf("%d", tab[i]);
+//		}
+//		else {
+//			printf("%d, ", tab[i]);
+//		}
+//	}
+//}
+//
+//int main()
+//{
+//	info();
+//	printf("Podaj 10 liczb calkowitych: \n");	
+//	int n[ILE];
+//	wczytaj_tab(n, ILE);
+//	sortuj(n, ILE);
+//	wypisz_liczby(n, ILE);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 80                                  */
+/*===========================================================================*/
+
+//#include <stdio.h>
+//#include <time.h>
+//#include<stdlib.h>
+//#define ILE 10
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program losuje 10 liczb calkowitych nieujemnych i wypisuje je w kolejnosci od najmniejszej do najwiekszej.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//
+//void wczytaj_liczbe(int tab[], int n) {
+//	srand((unsigned)time(NULL));
+//	for (int i = 0; i < n; ++i) {
+//		tab[i] = rand();
+//	}
+//}
+//
+//
+//void wypisz_tab(int tab[], int n) {		
+//	for (int i = 0; i < n; ++i) {
+//		printf("%d = %d\n", i + 1, tab[i]);
+//	}
+//}
+//void sortuj(int tab[], int n)
+//{
+//	for (int i = 0; i <= n - i; ++i) {
+//		for (int j = 0; j < n - i - 1; ++j) {
+//			if (tab[j] > tab[j + i]) {
+//				int pom = tab[j];
+//				tab[j] = tab[j + 1];
+//				tab[j + 1] = pom;
+//			}
+//		}
+//	}
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	int n[ILE];
+//	wczytaj_liczbe(n, ILE);
+//	sortuj(n, ILE);
+//	wypisz_tab(n, ILE);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 81                                  */
+/*===========================================================================*/
+//
+//
+//#include <stdio.h>
+//#include <time.h>
+//#include<stdlib.h>
+//#include<limits.h>
+//#define ILE 10
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program losuje 10 liczb z przedzialu [1,2] i wypisuje je w kolejnosci od najmniejszej do najwiekszej.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//
+//void wczytaj_liczbe(int tab[], int n) {
+//	srand((unsigned)time(NULL));
+//	for (int i = 0; i < n; ++i) {
+//		tab[i] = rand() / (double)RAND_MAX * 2.0;
+//	}
+//}
+//
+//
+//void wypisz_tab(int tab[], int n) {
+//	for (int i = 0; i < n; ++i) {
+//		printf("%d = %lf\n", i + 1, (double)tab[i]);
+//	}
+//}
+//void sortuj(int tab[], int n)
+//{
+//	for (int i = 0; i <= n - i; ++i) {
+//		for (int j = 0; j < n - i - 1; ++j) {
+//			if (tab[j] > tab[j + i]) {
+//				int pom = tab[j];
+//				tab[j] = tab[j + 1];
+//				tab[j + 1] = pom;
+//			}
+//		}
+//	}
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	int n[ILE];
+//	wczytaj_liczbe(n, ILE);
+//	sortuj(n, ILE);
+//	wypisz_tab(n, ILE);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+/*===========================================================================*/
+/*                               ZADANIE 82                                  */
+/*===========================================================================*/
+//
+//
+//#include <stdio.h>
+//#define ILE 100
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program wczytuje n liczb calkowitych i sprawdza, czy wsrod nich znajduje się para jednakowych.");
+//	printf("Liczbe naturalna n podaje uzytkownik\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void wczytaj_int_1W(int tab[], int n) {		//wpisuje liczbe podana przez uzytkownika do tablicy
+//		for (int i = 0; i < n; ++i) {
+//			printf("liczba %d:\t", i + 1);
+//			tab[i] = wczytaj_int();
+//		}
+//
+//	}
+//void wypiszTab(int tab[], int n) {
+//	printf("Podales liczby:\n");
+//	for (int i = 0; i < n; i++)
+//	{
+//		if (i == n-1)
+//		{
+//			printf("%d", tab[i]);
+//		}
+//		else
+//		{
+//			printf("%d, ", tab[i]);
+//		}
+//	}
+//}
+//
+//void czyPara(int tab[], int n) {
+//	int iloscPar = 0;
+//	for (int i = 0; i < n; i++)
+//	{
+//		for (int j = i+1; j < n ; j++)
+//		{
+//			if (tab[j] == tab[i])
+//			{
+//				iloscPar++;
+//			}
+//		}
+//	}
+//	if (iloscPar > 0)
+//	{
+//		printf("\nW podanych liczbach znajduje sie para");
+//	}
+//	else
+//	{
+//		printf("\nW podanych liczbach nie ma pary\n");
+//	}
+//}
+//_Bool czy_jest_para(int tab[], int n) {
+//	enum { TRUE = 1, FALSE = 0 };
+//	for (int i = 0; i < n; i++) {
+//
+//		for (int j = i + 1; j < n; j++) {
+//
+//			if (tab[i] == tab[j]) {
+//				return TRUE;
+//			}
+//			else {
+//				return FALSE;
+//			}
+//		}
+//	}
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("Ile liczb chcesz podac (nie wiecej niz 100)?: \n");
+//	int n = wczytaj_int();
+//	int tab[ILE]; 
+//	wczytaj_int_1W(tab, n);
+//	wypiszTab(tab, n);
+//	if (czy_jest_para(tab, n) == 1) {
+//		printf("\nWsrod nich znajduje sie para jednakowych.\nKoniec programu.\n");
+//	}
+//	else {
+//		printf("\nWsrod nich nie znajduje sie para jednakowych.\nKoniec programu.\n");
+//	}
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 83                                  */
+/*===========================================================================*/
+//
+//#include <stdio.h>
+//
+//#define ILE 100
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program oblicza wartosc wielomianu w(x) w punkcie x.\n");
+//	printf("Stopien, wspolczynniki oraz x podaje uzytkownik\n");
+//	printf("Autor: Anna Prusakow\n");
+//	printf("\n\nw(x)=a0+a1x+a2x^2+...+anx^n\n\n\n");
+//}
+//int wczytaj_int(void)	//wczytuje stopien wielomianu podany przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_argument(void)	//wczytuje liczbe x podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//void wczytaj_int_1W(int tab[], int n) {		//wpisuje liczbe podana przez uzytkownika do tablicy
+//	for (int i = 0; i <= n; ++i) {
+//		if (i == 0) {
+//			printf("Podaj wspolczynnik a0: \t");
+//		}
+//		else {
+//			printf("Podaj wspolczynnik a%d:\t", i);
+//		}
+//		tab[i] = wczytaj_int();
+//	}
+//
+//}
+//double oblicz_wielomian(int tab[], int n, double x) {		
+//	double wynik=0;
+//	double pot = 1;
+//	for (int i = 1; i <= n; ++i) {
+//		pot *= x;
+//		wynik += tab[i] * pot;
+//	}
+//	return wynik;
+//}
+//int main()
+//{
+//	info();
+//	printf("Podaj stopien wielomianu (nie wiekszy niz 100): \t");
+//	int n = wczytaj_int();
+//	int tab[ILE]; 
+//	double wynik;
+//	wczytaj_int_1W(tab, n);
+//	printf("Podaj argument x: \t");
+//	double x = wczytaj_argument();
+//	wynik=oblicz_wielomian(tab, n, x);
+//	printf("Wielomian %d-stopnia o podanych wspolczynnikach wynosi %.2lf dla argumentu %.2lf.\nKoniec.\n", n, wynik, x);
+//	return 0;
+//}
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 84                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program oblicza wartosc wzoru Newtona oraz tworzy trojkat Pascala\n");
+//	printf("Autor: Anna Prusakow\n");
+//
+//}
+//
+//
+//int dwumian_Newtona(int n, int k) {
+//	if (k == 0 || k == n)
+//	{
+//		return 1;
+//	}
+//	else
+//	{
+//		return dwumian_Newtona(n - 1, k - 1) + dwumian_Newtona(n - 1, k);
+//	}
+//}
+//void trojkatPascala(int n) {
+//	for (int i = 0; i < n; i++)
+//	{
+//		printf("1 ");
+//		for (int j = 1; j <= i; j++)
+//		{
+//			printf("%3d ", dwumian_Newtona(i, j));
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//
+//
+//int main()
+//{
+//	info();
+//	trojkatPascala(13);
+//	printf("\nKoniec.\n");
+//	return 0;
+//}
+//
+
+/*===========================================================================*/
+/*                               ZADANIE 85                                  */
+/*===========================================================================*/
+
+//#include <stdio.h>
+//#define ILE 35
+//void info() {			//informuje o zastosowaniu rogramu
+//	printf("Program oblicza wartosc wzoru Newtona oraz tworzy trojkat Pascala\n");
+//	printf("Autor: Anna Prusakow\n");
+//
+//}
+//
+//int newton(int n, int k) {
+//	if (k == 0 || k == n)
+//	{
+//		return 1;
+//	}
+//	else
+//	{
+//		return newton(n - 1, k - 1) + newton(n - 1, k);
+//	}
+//}
+//void trojkat_Pascala(int tab[], int n) {
+//	for (int i = 0; i < ILE; i++)
+//	{
+//		tab[i] = 1;
+//		for (int j = i - 1; j > 0; --j)
+//		{
+//			tab[j] += tab[j - 1];
+//		}
+//		for (int j = 0; j <= i; j++)
+//		{
+//			if (j == 0)
+//			{
+//				printf("%d", tab[j]);
+//			}
+//			else
+//			{
+//				printf("%10d ", tab[j]);
+//			}
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//int main()
+//{
+//	info();
+//	int tab[ILE];
+//	trojkat_Pascala(tab, ILE);
+//	printf("\n\nKoniec programu.\n\n");
+//	return 0;
+//}
+
+/*===========================================================================*/
+/*                               ZADANIE 86                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//
+//int main()
+//{
+//
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 87                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program wczytuje oraz wypisuje elementy tabeli, ktora ma m wierszy i n kolumn.\n");
+//	printf("Liczby naturalne m i n (<=25) podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wczytaj_double_2D(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j]=liczba;
+//		}
+//	}
+//}
+//void wypisz_macierz(double tab[][MAX], int m, int n) {
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = {0};
+//	wczytaj_double_2D(tab, m, n);
+//	wypisz_macierz(tab, m, n);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 88                                  */
+/*===========================================================================*/
+
+
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program zamienia podana przez uzytkownika macierz\n(n-wierszy i m-koumn) na macierz z m-wierszy i n-kolumn.\n");
+//	printf("Liczby naturalne m i n (<=25) podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_macierz(double tab[][MAX], int m, int n) {
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//void wypisz_macierz1(double tab[][MAX], int m, int n) {		//wypisuje macierz z zamienionymi wierszami i kolumnami:
+//	printf("\n\n");
+//	for (int i = 1; i <= m; ++i) {
+//		for (int j = 1; j <= n; ++j) {
+//			printf("%.1lf ", tab[j][i]);
+//		}
+//		printf("\n");
+//	}
+//}
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	wpisz_do_tabeli(tab, m, n);
+//	wypisz_macierz(tab, m, n);
+//	printf("\n\nMacierz z zamienionymi wierszami i kolumnami: \n");
+//	wypisz_macierz1(tab, m, n);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 89                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program znajduje element maksymalny w tabeli liczb o m wierszach i n kolumnach podanej przez uzytkownika.\n");
+//	printf("Liczby naturalne m i n (<=25) podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_macierz(double tab[][MAX], int m, int n) {
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//double znajdz_max(double tab[][MAX], int m, int n) {		
+//	double pom = 0;
+//	for (int i = 1; i <= n; ++i) {
+//		
+//		for (int j = 1; j <= m; ++j) {
+//			if (tab[i][j] < tab[i + 1][j + 1]) {
+//				pom = tab[i + 1][j + 1];
+//			}
+//		}
+//	}
+//	return pom;
+//}
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	wpisz_do_tabeli(tab, m, n);
+//	wypisz_macierz(tab, m, n);
+//	znajdz_max(tab, m, n);
+//	double pom = znajdz_max(tab, m, n);
+//	printf("\n\nElement maksymalny: %.2lf", pom);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 90                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program dla tablicy o m wierszach i n kolumnach oraz elementach,ktore sa albo zerami, albo\njedynkami sprawdza, czy w kazdym");
+//	printf("wierszu i w kazdej kolumnie stoi dokladnie jedna jedynka.\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\nProgram pozwala na wpisanie jedynie jedynek i zer.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || liczba != 1 && liczba != 0 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//int czy_jedynka(double tab[][MAX], int m, int n) {
+//	int pom = 0;
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			if (tab[i][j] == 1) {
+//				pom++;
+//			}
+//		}
+//	}
+//	return pom;
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	wpisz_do_tabeli(tab, m, n);
+//	int pom = czy_jedynka(tab, m, n);
+//	if (pom != 1) {
+//		printf("Nie jest prawda, ze w kazdym wierszu i w kazdej kolumnie stoi dokladnie jedna jedynka.");
+//	}
+//	else {
+//		printf("W kazdym wierszu i w kazdej kolumnie stoi dokladnie jedna jedynka.");
+//	}
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+//
+
+/*===========================================================================*/
+/*                               ZADANIE 91                                  */
+/*===========================================================================*/
+
+
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program oblicza sume wszystkich elementow w tabeli liczb.\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//double wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//	double suma = 0;
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//			suma += tab[i][j];
+//		}
+//	}
+//	return suma;
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	double suma=0;
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	suma = wpisz_do_tabeli(tab, m, n);
+//	printf("\nSuma wszystkich elementow tablicy: %.2lf", suma);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 92                                  */
+/*===========================================================================*/
+
+//
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program oblicza oblicza sume elementow lezacych na glownej przekatnej tabeli liczb o m wierszach i n kolumnach.\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//double oblicz_sume(double tab[][MAX], int m, int n) {		//oblicza sume elementow z glownej przekatnej
+//	double suma = 0;
+//	if (m == n) {
+//		for (int i = 0; i <= n; ++i) {
+//			suma += tab[i][i];
+//		}
+//	}
+//	else {
+//		int k = (m < n) ? m : n;
+//		for (int i = 0; i <= k; ++i) {
+//			suma += tab[i][i];
+//		}
+//	}
+//	return suma;
+//}
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	double suma = 0;
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(tab, m, n);
+//	suma = oblicz_sume(tab, m, n);
+//	printf("\nSuma wszystkich elementow glownej przekatnej tablicy: %.2lf", suma);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 93                                  */
+/*===========================================================================*/
+
+
+
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program oblicza oblicza sume elementow lezacych nad i pod glowna przekatna tabeli liczb o m wierszach i n kolumnach.\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do macierzy
+//
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//
+//double oblicz_sume(double tab[][MAX], int m, int n) {		//oblicza sume elementow spoza glownej przekatnej
+//	double suma_przekatnej = 0;
+//	double suma = 0;
+//	if (m == n) {
+//		for (int i = 0; i <= n; ++i) {
+//			suma_przekatnej += tab[i][i];
+//		}
+//	}
+//	else {
+//		int k = (m < n) ? m : n;
+//		for (int i = 0; i <= k; ++i) {
+//			suma_przekatnej += tab[i][i];
+//		}
+//	}
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			suma += tab[i][j];
+//		}
+//	}
+//	suma = suma - suma_przekatnej;
+//	return suma;
+//}
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	double suma = 0;
+//	printf("\nPodaj wartosc elementow macierzy o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(tab, m, n);
+//	suma = oblicz_sume(tab, m, n);
+//	printf("\nSuma wszystkich elementow spoza glownej przekatnej tablicy: %.2lf", suma);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+//
+/*===========================================================================*/
+/*                               ZADANIE 94                                  */
+/*===========================================================================*/
+
+
+
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program sprawdza, czy wszystkie elementy tabeli o m wierszach i n kolumnach lezace ponizej\nglownej przekatnej sa zerami. ");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//int czy_zero(double tab[][MAX], int m, int n) {			//sprawdza czy wszystkie elementy pod glowna przekatna sa 0
+//	int pom = 0;
+//		for (int i = 0; i < m; ++i) {
+//			for (int j = 0; j < i; ++j) {
+//				if (tab[i][j] == 0) {
+//					pom = 1;
+//				}
+//				else {
+//					pom = 0;
+//				}
+//			}
+//		}
+//	return pom;
+//}
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	printf("\nPodaj wartosc elementow tabeli o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(tab, m, n);
+//	int pom = czy_zero(tab, m, n);
+//	if (pom == 0) {
+//		printf("Nie jest prawda, ze wszystkie elementy tabeli lezace pod glowna przekatna sa zerami.\n");
+//	}
+//	else {
+//		printf("Jest prawda, ze wszystkie elementy tabeli lezace pod glowna przekatna sa zerami.\n");
+//	}
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 95                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program zamienia miejscami dwa wiersze tabeli o m wierszach i n kolumnach\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_tabele(double tab[][MAX], int m, int n) {		//wypisuje tabele
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//void zamien_miejscami(double tab[][MAX], int m, int n) {	
+//		printf("\n\n");
+//		for (int i = 1; i <2; ++i) {
+//			for (int j = 1; j <= m; ++j) {
+//				double pom = tab[i+1][j];
+//				tab[i+1][j]=tab[i][j];
+//				tab[i][j]=pom;
+//			}
+//		}
+//		for (int i = 1; i <= n; ++i) {
+//			for (int j = 1; j <= m; ++j) {
+//				printf("%.1lf ", tab[i][j]);
+//			}
+//			printf("\n");
+//		}
+//	}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	printf("\nPodaj wartosc elementow tabeli o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(tab, m, n);
+//	wypisz_tabele(tab, m, n);
+//	printf("\nTabela o podanych wartosciach z zamienionymi dwoma pierwszymi wierszami:\n");
+//	zamien_miejscami(tab, m, n);
+//
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+/*===========================================================================*/
+/*                               ZADANIE 96                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program w tabeli o m wierszach i n kolumnach zamienia s-ty wiersz z s-ta kolumna, gdzie s jest\n");
+//	printf("numerem wiersza i kolumny, na przecieciu ktorych jest element maksymalny glownej przekatnej.\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_tabele(double tab[][MAX], int m, int n) {		//wypisuje tabele
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//double znajdz_s(double tab[][MAX], int m, int n) {		//znajduje s (max element w glownej przekatnej tablicy)
+//	double s = 0;
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			if (m == n) {
+//				for (int i = 0; i <= n; ++i) {
+//					s = tab[i][i];
+//				}
+//			}
+//			else {
+//				int k = (m < n) ? m : n;
+//				for (int i = 0; i <= k; ++i) {
+//					s = tab[i][i];
+//				}
+//			}
+//			if (tab[i][j] < tab[i + 1][j + 1]) {
+//				s = tab[i + 1][j + 1];
+//			}	
+//		}
+//	}
+//	return s;
+//}
+//
+//void zamien_miejscami(double tab[][MAX], int m, int n, double s) {	//zamienia miejscami s-ty wiersz z s-ta kolumna
+//		printf("\n\n");
+//		for (int i = 1; i < s; ++i) {
+//			for (int j = 1; j <= s; ++j) {
+//				double pom = tab[i][j];
+//				tab[i][j]=tab[j][i];
+//				tab[j][i]=pom;
+//			}
+//		}
+//		for (int i = 1; i <= n; ++i) {
+//			for (int j = 1; j <= m; ++j) {
+//				printf("%.1lf ", tab[i][j]);
+//			}
+//			printf("\n");
+//		}
+//	}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double tab[MAX][MAX] = { 0 };
+//	printf("\nPodaj wartosc elementow tabeli o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(tab, m, n);
+//	wypisz_tabele(tab, m, n);
+//	double s = znajdz_s(tab, m, n);
+//	printf("\nTabela o podanych wartosciach z zamienionym %.0lf-tym wierszem z %.0lf-ta kolumna: \n", s, s);
+//	zamien_miejscami(tab, m, n, s);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+/*===========================================================================*/
+/*                               ZADANIE 97                                  */
+/*===========================================================================*/
+
+
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program dla dwoch tabel o m wierszach i n kolumnach oblicza elementy trzeciej, spelniajace dla\ni = 1, 2,...,m,");
+//	printf("j=1,2,...,n zaleznosc: cij = aij + bij.\n");
+//	printf("Liczby naturalne m i n (<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//int wczytaj_int1(void)	//wczytuje liczbe n podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba n
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_tabele(double tab[][MAX], int m, int n) {		//wypisuje tabele
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//double znajdz_s(double tab[][MAX], int m, int n) {		//znajduje s (max element w glownej przekatnej tablicy)
+//	double s = 0;
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			if (m == n) {
+//				for (int i = 0; i <= n; ++i) {
+//					s = tab[i][i];
+//				}
+//			}
+//			else {
+//				int k = (m < n) ? m : n;
+//				for (int i = 0; i <= k; ++i) {
+//					s = tab[i][i];
+//				}
+//			}
+//			if (tab[i][j] < tab[i + 1][j + 1]) {
+//				s = tab[i + 1][j + 1];
+//			}
+//		}
+//	}
+//	return s;
+//}
+//
+//void oblicz_tabele_c(double a[][MAX], double b[][MAX], double c[][MAX],int m, int n) {	//wyznacza tabele c
+//	printf("\n\n");
+//	for (int i = 1; i <= n; ++i) {
+//		for (int j = 1; j <= m; ++j) {
+//			c[i][j] = a[i][j] + b[i][j];
+//		}
+//	}
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe wierszy m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe kolumn n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int1();
+//	double a[MAX][MAX] = { 0 };
+//	double b[MAX][MAX] = { 0 };
+//	double c[MAX][MAX] = { 0 };
+//	printf("\n\nTabela a:\n");
+//	printf("\nPodaj wartosc elementow tabeli a o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(a, m, n);	
+//	wypisz_tabele(a, m, n);
+//	printf("\n\nTabela b:\n");
+//	printf("\nPodaj wartosc elementow tabeli b o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(b, m, n);
+//	wypisz_tabele(b, m, n);
+//	printf("\n\nTabela c:");
+//	oblicz_tabele_c(a, b, c, m, n);
+//	wypisz_tabele(c, m, n);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 98                                  */
+/*===========================================================================*/
+
+//
+//#include <stdio.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program dla tabeli o m-wierszach i n-kolumnach i tabeli o n-wierszach i k-kolumnach\n");
+//	printf("oblicza elementy trzeciej o m-wierszach i k-kolumnach, spelniajace dla i=1,2,..,m,");
+//	printf("j=1,2,...,k zaleznosc: cij=ai1*b1j + ai2*b2j +...+ ain*bnj.\n");
+//	printf("Liczby naturalne m, n i k(<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m, n i k
+//	while (scanf_s("%d", &liczba) != 1 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 1; i <= m; ++i) {
+//		for (int j = 1; j <= n; ++j) {
+//			printf("tab[%d][%d]: \t", i, j);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_tabele(double tab[][MAX], int m, int n) {		//wypisuje tabele
+//	printf("\n\n");
+//	for (int i = 1; i <= m; ++i) {
+//		for (int j = 1; j <= n; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//
+//void oblicz_tabele_c(double a[][MAX], double b[][MAX], double c[][MAX],int m, int n, int k) {	//wyznacza tabele c
+//	printf("\n\n");
+//	for (int i = 0; i < m; i++) {
+//		for (int j = 0; j < k; j++) {
+//			c[i][j] = 0;
+//			for (int s = 1; s <= n; ++s) {
+//				c[i][j] += a[i][s] * b[s][j];
+//			}
+//		}
+//	}
+//}
+//
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int();
+//	printf("\nPodaj liczbe k (nie wiecej niz 25): \t");
+//	int k = wczytaj_int();
+//	double a[MAX][MAX] = { 0 };
+//	double b[MAX][MAX] = { 0 };
+//	double c[MAX][MAX] = { 0 };
+//	printf("\n\nTabela a:\n");
+//	printf("\nPodaj wartosc elementow tabeli a o %d wierszach i %d kolumnach.\n", m, n);
+//	wpisz_do_tabeli(a, m, n);	
+//	wypisz_tabele(a, m, n);
+//	printf("\n\nTabela b:\n");
+//	printf("\nPodaj wartosc elementow tabeli b o %d wierszach i %d kolumnach.\n", n, k);
+//	wpisz_do_tabeli(b, n, k);
+//	wypisz_tabele(b, n, k);
+//	printf("\n\nTabela c (o %d wierszach i %d kolumnach):", m, k);
+//	oblicz_tabele_c(a, b, c, m, n, k);
+//	wypisz_tabele(c, m, k);
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+/*===========================================================================*/
+/*                               ZADANIE 99                                  */
+/*===========================================================================*/
+
+
+//
+//#include <stdio.h>
+//#include <math.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program dla tabeli o m-wierszach i n-kolumnach oblicza wartosc:\n");
+//	printf("max po i=1,2,...,m pi = max{ p1,p2,...,pm }.\n");
+//	printf("Liczby naturalne m, n i k(<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m, n 
+//	while (scanf_s("%d", &liczba) != 1 || liczba > 25 && liczba<=0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 0; i < m; ++i) {
+//		for (int j = 0; j < n; ++j) {
+//			printf("tab[%d][%d]: \t", i+1, j+1);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_tabele(double tab[][MAX], int m, int n) {		//wypisuje tabele
+//	printf("\n\n");
+//	for (int i = 0; i < m; ++i) {
+//		for (int j = 0; j < n; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//
+//void oblicz_p(double a[][MAX], int m, int n, double p[]) {	//oblicza p, wpisuje do tablicy
+//	double suma=0;
+//	for (int i = 0; i < m; ++i) {
+//		for (int j = 0; j < n; ++j) {
+//			suma += fabs(a[i][j]);
+//		}
+//		p[i] = suma;
+//	}
+//}
+//double max_p(double p[], int m) {
+//	double max = 0;
+//	for (int i = 0; i < m; ++i) {
+//		if (p[i] < p[i + 1]) {
+//			max = p[i + 1];
+//		}
+//	}
+//	return max;
+//}
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int();
+//	double a[MAX][MAX] = { 0 };
+//	double p[MAX] = { 0 };
+//	wpisz_do_tabeli(a, m, n);
+//	printf("\nPodaj wartosc elementow tabeli a o %d wierszach i %d kolumnach.\n", m, n);
+//	wypisz_tabele(a, m, n);
+//	oblicz_p(a, m, n, p);
+//	printf("\nWynikiem jest liczba %.lf.", max_p(p,m));
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+
+
+
+/*===========================================================================*/
+/*                               ZADANIE 100                                 */
+/*===========================================================================*/
+//
+//
+//
+//#include <stdio.h>
+//#include <math.h>
+//#define MAX 25
+//void info() {		//informuje o zastosowaniu programu
+//	printf("Program dla tabeli o m-wierszach i n-kolumnach oblicza wartosc:\n");
+//	printf("liczbe ktorej nie umiem tu zapisac.\n");
+//	printf("Liczby naturalne m, n i k(<=25) oraz elementy tabeli podaje uzytkownik.\n");
+//	printf("Autor: Anna Prusakow\n");
+//}
+//int wczytaj_int(void)	//wczytuje liczbe m podana przez uzytkownika
+//{
+//	int liczba; // wczytana liczba m, n 
+//	while (scanf_s("%d", &liczba) != 1 || liczba > 25 && liczba <= 0 || getchar() != '\n') {
+//		printf("Bledne dane. Popraw:\t\t");
+//		while (getchar() != '\n')
+//			;
+//	}
+//	return liczba;
+//}
+//
+//void wpisz_do_tabeli(double tab[][MAX], int m, int n) {		//wpisuje liczby podane przez uzytkownika do tabeli
+//
+//	for (int i = 0; i < m; ++i) {
+//		for (int j = 0; j < n; ++j) {
+//			printf("tab[%d][%d]: \t", i + 1, j + 1);
+//			double liczba;
+//			while (scanf_s("%lf", &liczba) != 1 || getchar() != '\n') {
+//				printf("Bledne dane. Popraw:\t\t");
+//				while (getchar() != '\n')
+//					;
+//			}
+//			tab[i][j] = liczba;
+//		}
+//	}
+//}
+//void wypisz_tabele(double tab[][MAX], int m, int n) {		//wypisuje tabele
+//	printf("\n\n");
+//	for (int i = 0; i < m; ++i) {
+//		for (int j = 0; j < n; ++j) {
+//			printf("%.1lf ", tab[i][j]);
+//		}
+//		printf("\n");
+//	}
+//}
+//
+//
+//double oblicz_wartosc(double a[][MAX], int m, int n) {
+//	double suma = 0;
+//	for (int i = 0; i < m; ++i) {
+//		for (int j = 0; j < n; ++j) {
+//			suma += ((a[i][j])*(a[i][j]));
+//		}
+//	}
+//	double wynik = sqrt(suma);
+//	return wynik;
+//}
+//
+//
+//
+//int main()
+//{
+//	info();
+//	printf("\nPodaj liczbe m (nie wiecej niz 25): \t");
+//	int m = wczytaj_int();
+//	printf("\nPodaj liczbe n (nie wiecej niz 25): \t");
+//	int n = wczytaj_int();
+//	double a[MAX][MAX] = { 0 };
+//	wpisz_do_tabeli(a, m, n);
+//	printf("\nPodaj wartosc elementow tabeli a o %d wierszach i %d kolumnach.\n", m, n);
+//	wypisz_tabele(a, m, n);
+//	printf("\nWynikiem jest liczba %.2lf.", oblicz_wartosc(a, m, n));
+//	printf("\n\nKoniec programu.\n");
+//	return 0;
+//}
+//
