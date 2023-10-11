@@ -1,0 +1,86 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <ctime>
+#include <cstring>
+#include <windows.h> // Dla funkcji GetComputerName
+using namespace std;
+
+// Struktura przechowująca dane
+struct Dane {
+    int ID;
+    char nick[10];
+    unsigned level;
+    double pkt;
+};
+
+// Przeciążony operator pisania do strumienia dla typu Dane
+ostream& operator<<(ostream& os, const Dane& d) {
+    os << "|" << setw(6) << setfill('0') << d.ID << "|" << setw(10) << left << d.nick << "|"
+       << setw(7) << right << d.level << "|"
+       << fixed << setprecision(1) << setw(6) << right << d.pkt << "|";
+    return os;
+}
+
+// Funkcja do generowania raportu
+void generujRaport(const Dane tablica[], int rozmiar, const char* nazwaPliku) {
+    // Otwieramy plik do zapisu
+    ofstream plik(nazwaPliku);
+
+    // Pobieramy aktualną datę i czas
+    time_t czas = time(0);
+    tm* czasInfo = localtime(&czas);
+
+    // Pobieramy nazwę komputera
+    char nazwaKomputera[MAX_COMPUTERNAME_LENGTH + 1];
+    DWORD rozmiarNazwy = sizeof(nazwaKomputera);
+    GetComputerName(nazwaKomputera, &rozmiarNazwy);
+
+    // Nagłówek
+    plik << put_time(czasInfo, "%c") << endl;
+    plik << nazwaKomputera << endl;
+    plik << "+------+----------+-------+------+" << endl;
+    plik << "| ID | nick | level | pkt |" << endl;
+    plik << "+------+----------+-------+------+";
+
+    // Wypełniamy tabelę w pliku
+    for (int i = 0; i < rozmiar; i++) {
+        plik << endl << tablica[i];
+    }
+
+    // Stopka
+    plik << endl << "+------+----------+-------+------+";
+    Dane maxDane = tablica[0];
+    for (int i = 1; i < rozmiar; i++) {
+        if (tablica[i].level > maxDane.level) {
+            maxDane = tablica[i];
+        }
+    }
+    plik << endl << "|000000| |" << setw(7) << right << maxDane.level << "|"
+         << fixed << setprecision(1) << setw(6) << right << maxDane.pkt << "|";
+    plik << endl << "+------+----------+-------+------+";
+
+    // Zamykamy plik
+    plik.close();
+}
+
+int main() {
+    // Tworzenie i wypełnienie tablicy
+    Dane tablica[4];
+    tablica[0] = {4, "Piasek", 7, 30.0};
+    tablica[1] = {8, "Piesek", 12, 100.9};
+    tablica[2] = {12, "Pasek", 15, 5432.1};
+    tablica[3] = {16, "Pisak", 2, 50.0};
+
+    // Pytamy użytkownika o nazwę pliku
+    char nazwaPliku[256];
+    cout << "Podaj nazwę pliku do zapisu: ";
+    cin >> nazwaPliku;
+
+    // Generujemy raport
+    generujRaport(tablica, 4, nazwaPliku);
+
+    cout << "Raport został wygenerowany i zapisany do pliku: " << nazwaPliku << endl;
+
+    return 0;
+}
