@@ -1,0 +1,98 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+
+
+template <typename T>
+class DataContainer {
+private:
+	struct Node {
+		T data;
+		Node* next;
+		Node(const T& val) : data(val), next(nullptr) {}
+	};
+
+	Node* head;  // Wskaźnik na pierwszy element listy
+	Node* current;  // Wskaźnik na bieżący element listy
+
+	std::string filename;  // Nazwa pliku
+
+public:
+	// Konstruktor bezargumentowy
+	DataContainer() : head(nullptr), current(nullptr) {}
+
+	// Konstruktor jednoargumentowy
+	DataContainer(const std::string& file) : head(nullptr), current(nullptr), filename(file) {
+		open(file);
+	}
+
+	// Destruktor
+	~DataContainer() {
+		while (head != nullptr) {
+			Node* temp = head;
+			head = head->next;
+			delete temp;
+		}
+	}
+	// Otwieranie pliku i wczytywanie danych
+	void open(const std::string& file) {
+		filename = file;
+		std::ifstream input(filename);
+
+		if (input.is_open()) {
+			T value;
+			while (input >> value) {
+				insert(value);
+			}
+			input.close();
+			rewind();
+		}
+	}
+	// Wstawianie nowego elementu po bieżącym elemencie
+	void insert(const T& value) {
+		if (current == nullptr) {
+			return;
+		}
+		Node* newNode = new Node(value);
+		newNode->next = current->next;
+		current->next = newNode;
+		current = newNode;
+	}
+
+	// Zapisywanie danych do pliku
+	void save() {
+		save(filename);
+	}
+
+	void save(const std::string& file) {
+		std::ofstream output(file);
+
+		if (output.is_open()) {
+			Node* temp = head;
+			while (temp != nullptr) {
+				output << temp->data << std::endl;
+				temp = temp->next;
+			}
+			output.close();
+		}
+	}
+	// Pobieranie bieżącego elementu i przesuwanie wskaźnika
+	bool get(T& value) {
+		if (current == nullptr) {
+			return false;
+		}
+		value = current->data;
+		current = current->next;
+		return true;
+	}
+	// Sprawdzanie, czy wskaźnik jest na końcu listy
+	bool end() const {
+		return current == nullptr;
+	}
+
+	// Ustawianie wskaźnika na początek listy
+	void rewind() {
+		current = head;
+	}
+};
