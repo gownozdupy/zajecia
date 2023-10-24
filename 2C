@@ -1,0 +1,170 @@
+#include <iostream>
+#include <fstream>
+#include <stack>
+#include <string>
+
+class TexListValidator {
+public:
+	void validateTexList(const std::string& filename) {
+		std::ifstream file(filename);
+		if (!file.is_open()) {
+			std::cerr << "Unable to open the file." << std::endl;
+			return;
+		}
+
+		std::stack<std::string> tagStack;
+		std::string line;
+		int lineNumber = 0;
+
+		try {
+			while (std::getline(file, line)) {
+				lineNumber++;
+
+				if (isOpeningTag(line)) {
+					tagStack.push(line);
+				}
+				else if (isClosingTag(line)) {
+					if (tagStack.empty()) {
+						throw std::runtime_error("Unmatched closing tag at line " + std::to_string(lineNumber));
+					}
+					else {
+						tagStack.pop();
+					}
+				}
+			}
+
+			if (!tagStack.empty()) {
+				throw std::runtime_error("Unclosed tags found.");
+			}
+
+			std::cout << "TeX list is valid." << std::endl;
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+			std::cerr << "Invalid TeX list in the file." << std::endl;
+		}
+	}
+
+private:
+	bool isOpeningTag(const std::string& line) {
+		return line.find("\\begin{enumerate}") != std::string::npos || line.find("\\begin{itemize}") != std::string::npos;
+	}
+
+	bool isClosingTag(const std::string& line) {
+		return line.find("\\end{enumerate") != std::string::npos || line.find("\\end{itemize") != std::string::npos;
+	}
+};
+
+int main() {
+	TexListValidator validator;
+	std::string filename = "example.tex"; // Provide the filename you want to validate
+
+	validator.validateTexList(filename);
+
+	return 0;
+}
+
+
+
+
+
+
+
+2p
+
+#include <iostream>
+#include <fstream>
+#include <stack>
+#include <string>
+#include <sstream>
+
+class TexListValidator {
+public:
+	void validateTexList(const std::string& filename) {
+		std::ifstream file(filename);
+		if (!file.is_open()) {
+			std::cerr << "Unable to open the file." << std::endl;
+			return;
+		}
+
+		std::stack<std::string> tagStack;
+		std::string line;
+		int lineNumber = 0;
+
+		try {
+			while (std::getline(file, line)) {
+				lineNumber++;
+
+				std::string trimmedLine = trimWhitespace(line);
+				size_t commentPos = trimmedLine.find('%');
+
+				if (commentPos != std::string::npos) {
+					trimmedLine = trimmedLine.substr(0, commentPos);  // Remove comments before processing
+				}
+
+				if (trimmedLine.empty()) {
+					continue;  // Skip lines that are entirely comments
+				}
+
+				if (isOpeningTag(trimmedLine)) {
+					tagStack.push(trimmedLine);
+				}
+				else if (isClosingTag(trimmedLine)) {
+					if (tagStack.empty()) {
+						throw std::runtime_error("Unmatched closing tag at line " + std::to_string(lineNumber));
+					}
+					else {
+						tagStack.pop();
+					}
+				}
+
+				printWords(trimmedLine);
+			}
+
+			if (!tagStack.empty()) {
+				throw std::runtime_error("Unclosed tags found.");
+			}
+
+			std::cout << "TeX list is valid." << std::endl;
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+			std::cerr << "Invalid TeX list in the file." << std::endl;
+		}
+	}
+
+private:
+	std::string trimWhitespace(const std::string& line) {
+		size_t firstChar = line.find_first_not_of(" \t");
+		if (firstChar != std::string::npos) {
+			return line.substr(firstChar);
+		}
+		return "";
+	}
+
+	bool isOpeningTag(const std::string& line) {
+		return line.find("\\begin{enumerate") != std::string::npos || line.find("\\begin{itemize") != std::string::npos;
+	}
+
+	bool isClosingTag(const std::string& line) {
+		return line.find("\\end{enumerate") != std::string::npos || line.find("\\end{itemize") != std::string::npos;
+	}
+
+	void printWords(const std::string& line) {
+		std::string word;
+		std::istringstream iss(line);
+		while (iss >> word) {
+			std::cout << word << ' ';
+		}
+		std::cout << std::endl;
+	}
+};
+
+int main() {
+	TexListValidator validator;
+	std::string filename = "example.tex"; // Provide the filename you want to validate
+
+	validator.validateTexList(filename);
+
+	return 0;
+}
