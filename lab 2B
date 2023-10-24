@@ -1,0 +1,60 @@
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdexcept>
+
+
+using namespace std;
+
+
+void AnalizujTekst(ifstream& plik, int nr_linijki) {
+	string linijka;
+	bool czyWwyrazeniu = false;
+	string wyrazenie = "";
+
+	while (getline(plik, linijka))
+	{
+		nr_linijki++;
+		wyrazenie += linijka;
+
+		if (linijka.find("</TABLE>") != string::npos) {
+			if (czyWwyrazeniu) {
+				czyWwyrazeniu = false;
+				if (wyrazenie.find("<TABLE") == 0 && wyrazenie.find("<\TABLE>") != string::npos) {
+					cout << "Poprawne wyrazenie HTML: " << wyrazenie << endl;
+				}
+				else {
+					throw runtime_error("Blad w wyrazeniu HTML w linijce " + to_string(nr_linijki));
+				}
+				czyWwyrazeniu = true;
+			}
+		}
+		else if (linijka.find("<TABLE") != string::npos) {
+			if (czyWwyrazeniu) {
+				throw runtime_error("Niesparowane tagi w wyrazeniu HTML w linijce " + to_string(nr_linijki));
+				czyWwyrazeniu = true;
+			}
+			czyWwyrazeniu = true;
+		}
+	}
+	if (czyWwyrazeniu) {
+		throw runtime_error("Nie znaleziono zamykajacego tagu </TABLE> w wyrazeniu HTML w linijce " + to_string(nr_linijki));
+	}
+}
+int main() {
+	ifstream plik("test.html");
+	int nr_linijki = 0;
+	if (!plik.is_open()) {
+		cerr << "Blad otwarcia pliku wejsciowego." << endl;
+		return 1;
+	}
+	try {
+		AnalizujTekst(plik, nr_linijki);
+	}
+	catch (const exception& e) {
+		cerr << "Blad: " << e.what() << endl;
+	}
+	plik.close();
+	return 0;
+}
