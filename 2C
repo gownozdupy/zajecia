@@ -71,12 +71,30 @@ int main() {
 
 
 2p
-
 #include <iostream>
 #include <fstream>
 #include <stack>
 #include <string>
 #include <sstream>
+
+
+template<typename T, int rozm>
+class SzablonStosu {
+	T stos[rozm];
+	int top;
+public:
+	bool empty() {
+		return top == 0;
+	}
+	SzablonStosu() : top(0) {}
+	void push(const T& i) {
+		stos[top++] = i;
+	}
+	T pop() {
+		return stos[--top];
+	}
+}; 
+
 
 class TexListValidator {
 public:
@@ -87,7 +105,7 @@ public:
 			return;
 		}
 
-		std::stack<std::string> tagStack;
+		SzablonStosu<std::string, 100> tagStack;
 		std::string line;
 		int lineNumber = 0;
 
