@@ -1,0 +1,166 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdexcept>
+
+bool IsMathMLExpression(const std::string& line) {
+	return line.find("<math") == 0;
+}
+
+void AnalyzeMathMLExpression(std::ifstream& file, int lineNum) {
+	bool inExpression = false;
+	std::string expression = "";
+
+	std::string line;
+	while (std::getline(file, line)) {
+		lineNum++;
+		expression += line;
+
+		if (line.find("</math>") != std::string::npos) {
+			if (inExpression) {
+				// Jesli napotkano zamykajacy tag, to zakończ wyrazenie i analizuj je
+				inExpression = false;
+				if (expression.find("<math") == 0 && expression.find("</math>") != std::string::npos) {
+					std::cout << "Poprawne wyrazenie MathML: " << expression << std::endl;
+				}
+				else {
+					throw std::runtime_error("Blad w wyrazeniu MathML w linijce " + std::to_string(lineNum));
+				}
+				inExpression = true;
+			}
+		}
+
+		else if (line.find("<math") != std::string::npos) {
+			if (inExpression) {
+				throw std::runtime_error("Niesparowane tagi w wyrazeniu MathML w linijce " + std::to_string(lineNum));
+			inExpression = true;
+			}
+			inExpression = true;
+		}
+	}
+
+	if (inExpression) {
+		throw std::runtime_error("Nie znaleziono zamykajacego tagu </math> w wyrazeniu MathML w linijce " + std::to_string(lineNum));
+	}
+}
+
+int main() {
+	std::ifstream inputFile("mathml_input.txt");
+	int lineNum=0;
+	if (!inputFile.is_open()) {
+		std::cerr << "Blad otwarcia pliku wejsciowego." << std::endl;
+		return 1;
+	}
+
+	try {
+		AnalyzeMathMLExpression(inputFile, lineNum);
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Blad: " << e.what() << std::endl;
+	}
+
+	inputFile.close();
+	return 0;
+}
+
+
+
+
+
+
+
+
+2P
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdexcept>
+
+bool IsMathMLExpression(const std::string& line) {
+	return line.find("<math") == 0;
+}
+
+void AnalyzeMathMLExpression(std::ifstream& file, int lineNumber) {
+	int openedMathTags = 0;
+	int openedMfencedTags = 0;
+	int openedMrowTags = 0;
+
+	std::string line;
+	std::string expression = "";
+
+	while (std::getline(file, line)) {
+		lineNumber++;
+		expression += line;
+
+		if (line.find("</math>") != std::string::npos) {
+			if (openedMathTags > 0) {
+				openedMathTags--;
+				if (openedMfencedTags > 0 || openedMrowTags > 0) {
+					throw std::runtime_error("Niesparowane tagi w wyrazeniu MathML w linijce " + std::to_string(lineNumber));
+				}
+				if (openedMathTags == 0) {
+					std::cout << "Poprawne wyrazenie MathML w linijce " << lineNumber << ": " << expression << std::endl;
+				}
+			}
+			else {
+				throw std::runtime_error("Niesparowane tagi w wyrazeniu MathML w linijce " + std::to_string(lineNumber));
+			}
+			expression = "";
+		}
+
+		if (line.find("<math") != std::string::npos) {
+			openedMathTags++;
+		}
+
+		if (line.find("<mfenced") != std::string::npos) {
+			openedMfencedTags++;
+		}
+
+		if (line.find("</mfenced>") != std::string::npos) {
+			if (openedMfencedTags > 0) {
+				openedMfencedTags--;
+			}
+			else {
+				throw std::runtime_error("Niesparowane tagi w wyrazeniu MathML w linijce " + std::to_string(lineNumber));
+			}
+		}
+
+		if (line.find("<mrow") != std::string::npos) {
+			openedMrowTags++;
+		}
+
+		if (line.find("</mrow>") != std::string::npos) {
+			if (openedMrowTags > 0) {
+				openedMrowTags--;
+			}
+			else {
+				throw std::runtime_error("Niesparowane tagi w wyrazeniu MathML w linijce " + std::to_string(lineNumber));
+			}
+		}
+	}
+
+	if (openedMathTags > 0) {
+		throw std::runtime_error("Niesparowane tagi w wyrazeniu MathML w linijce " + std::to_string(lineNumber));
+	}
+}
+
+int main() {
+	std::ifstream inputFile("mathml_input.txt");
+	if (!inputFile.is_open()) {
+		std::cerr << "Blad otwarcia pliku wejsciowego." << std::endl;
+		return 1;
+	}
+
+	int lineNumber = 0;
+
+	try {
+		AnalyzeMathMLExpression(inputFile, lineNumber);
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Blad: " << e.what() << std::endl;
+	}
+
+	inputFile.close();
+	return 0;
+}
