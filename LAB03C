@@ -1,0 +1,202 @@
+//#include <iostream>
+//#include <vector>
+//#include <iterator>
+//#include <cmath>
+//
+//// Funkcja do generowania wartości losowych z zakresu [0, 10)
+//double randdouble() {
+//	return rand() / (double(RAND_MAX) + 1) * 10.0;
+//}
+//
+//// Szablon funkcji do obliczania różnic między dwoma przedziałami
+//template <typename InputIterator>
+//void Różnicuj1(InputIterator i1, InputIterator i2, InputIterator i3) {
+//	while (i1 != i2) {
+//		*i1 = *i1 - *i3;
+//		++i1;
+//		++i3;
+//	}
+//}
+//
+//// Szablon funkcji do obliczania różnic między przedziałem a stałą wartością D
+//template <typename InputIterator, typename T>
+//void Różnicuj2(InputIterator i1, InputIterator i2, T D) {
+//	while (i1 != i2) {
+//		*i1 = *i1 - D;
+//		++i1;
+//	}
+//}
+//
+//// Szablon funkcji do podnoszenia do kwadratu wartości w przedziale
+//template <typename InputIterator>
+//void DoKwadratu(InputIterator i1, InputIterator i2) {
+//	while (i1 != i2) {
+//		*i1 = *i1 * *i1;
+//		++i1;
+//	}
+//}
+//
+//int main() {
+//	const int n = 10; // Liczba pomiarów
+//
+//	// Inicjalizacja kontenerów p i q
+//	std::vector<double> p(n);
+//	std::vector<double> q(n);
+//
+//	// Wypełnienie kontenerów danymi losowymi z przedziału [0, 10)
+//	for (int i = 0; i < n; i++) {
+//		p[i] = randdouble();
+//		q[i] = randdouble();
+//	}
+//
+//	// Wypisanie obu serii danych
+//	std::cout << "Seria p: ";
+//	for (const double& val : p) {
+//		std::cout << val << " ";
+//	}
+//	std::cout << std::endl;
+//
+//	std::cout << "Seria q: ";
+//	for (const double& val : q) {
+//		std::cout << val << " ";
+//	}
+//	std::cout << std::endl;
+//
+//	// Obliczanie D
+//	double D = 0.0;
+//	Różnicuj1(p.begin(), p.end(), q.begin());
+//	for (const double& val : p) {
+//		D += val;
+//	}
+//	D /= n;
+//
+//	std::cout << "D: " << D << std::endl;
+//
+//	// Obliczanie S
+//	double S = 0.0;
+//	Różnicuj2(p.begin(), p.end(), D);
+//	DoKwadratu(p.begin(), p.end());
+//	for (const double& val : p) {
+//		S += val;
+//	}
+//	S = sqrt(S / (n - 1));
+//
+//	std::cout << "S: " << S << std::endl;
+//
+//	// Obliczanie T
+//	double T = D / (S / sqrt(n));
+//
+//	std::cout << "T: " << T << std::endl;
+//
+//	return 0;
+//}
+
+
+
+
+
+
+
+
+
+
+
+2 POZIOM
+
+
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+template <typename T>
+class Konten {
+public:
+	std::vector<T> dane;
+};
+
+template <typename T>
+class pomiary {
+public:
+	Konten<T> przed;
+	Konten<T> po;
+};
+
+template <typename T>
+class Kalkulator {
+public:
+	static typename std::vector<pomiary<T>>::iterator testStudenta(
+		typename std::vector<pomiary<T>>::iterator pierwszy,
+		typename std::vector<pomiary<T>>::iterator drugi
+	) {
+		auto min_T = std::numeric_limits<T>::max();
+		auto result = pierwszy;
+
+		for (auto it = pierwszy; it != drugi; ++it) {
+			T D = 0.0;
+			T S = 0.0;
+
+			for (const T& val : it->przed.dane) {
+				D += val;
+			}
+			D /= it->przed.dane.size();
+
+			for (const T& val : it->po.dane) {
+				S += val;
+			}
+			S = sqrt(S / (it->po.dane.size() - 1));
+
+			T T_value = D / (S / sqrt(it->po.dane.size()));
+
+			if (T_value < min_T) {
+				min_T = T_value;
+				result = it;
+			}
+		}
+
+		return result;
+	}
+};
+
+int main() {
+	const int m = 10; // Liczba par serii pomiarów
+	const int n = 10; // Długość serii pomiarów
+
+	std::vector<pomiary<double>> pomiary_list;
+
+	// Generowanie i wypełnianie serii pomiarów
+	for (int i = 0; i < m; i++) {
+		pomiary<double> seria;
+		seria.przed.dane.resize(n);
+		seria.po.dane.resize(n);
+
+		for (int j = 0; j < n; j++) {
+			seria.przed.dane[j] = rand() / (double(RAND_MAX) + 1) * 100.0;
+			seria.po.dane[j] = rand() / (double(RAND_MAX) + 1) * 100.0;
+		}
+
+		pomiary_list.push_back(seria);
+	}
+
+	// Wywołanie metody testStudenta
+	auto result = Kalkulator<double>::testStudenta(pomiary_list.begin(), pomiary_list.end());
+
+	std::cout << "Najmniejsza wartość T: " << result->przed.dane[0] << std::endl;
+	std::cout << "Seria przed: ";
+	for (const double& val : result->przed.dane) {
+		std::cout << val << " ";
+	}
+	std::cout << std::endl;
+	std::cout << "Seria po: ";
+	for (const double& val : result->po.dane) {
+		std::cout << val << " ";
+	}
+	std::cout << std::endl;
+
+	return 0;
+}
+
