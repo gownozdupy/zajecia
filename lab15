@@ -1,4 +1,68 @@
 #include <iostream>
+#include <random>
+#include <numeric>
+#include "konten.h"  // Załóżmy, że konten.h zawiera definicję Konten
+
+template <typename T, int ssize>
+class Kalkulator {
+public:
+    template <typename U>
+    struct pomiary {
+        Konten<U, ssize> przed;
+        Konten<U, ssize> po;
+    };
+
+    static void testtStudenta(
+        typename Konten<pomiary<T, ssize>>::iterator& pierwszy,
+        typename Konten<pomiary<T, ssize>>::iterator& drugi) {
+
+        T min_value = std::numeric_limits<T>::max();
+
+        for (auto it = pierwszy; it != drugi; ++it) {
+            // Obliczenia i porównania
+            // ...
+
+            if (warunek) {
+                min_value = wynik;
+                pierwszy = it;
+            }
+        }
+    }
+};
+
+int main() {
+    const int m = 7; // Ilość serii pomiarów
+    const int n = 5; // Długość serii pomiarów
+
+    // Tworzenie kontenera Konten<pomiary<double, n>>
+    Konten<typename Kalkulator<double, n>::pomiary<double>, m> kontener;
+
+    // Parametry testu
+    // Inicjalizacja serii wartości losowych
+    for (int i = 0; i < m; ++i) {
+        Kalkulator<double, n>::pomiary<double> serie;
+        for (int j = 0; j < n; ++j) {
+            serie.przed.push(1.0 * j);  // Przykładowe dane
+            serie.po.push(2.0 * j);     // Przykładowe dane
+        }
+        kontener.push(serie);
+    }
+
+    // Deklaracja obiektu Kalkulator
+    Kalkulator<double, n> kalkulator;
+
+    // Wywołanie metody testtStudenta
+    auto pierwszy = kontener.begin();
+    auto drugi = kontener.end();
+
+    kalkulator.testtStudenta(pierwszy, drugi);
+
+    std::cout << "Najmniejsza wartość T znajduje się w serii pomiarów nr " << (pierwszy - kontener.begin()) << std::endl;
+
+    return 0;
+}
+
+#include <iostream>
 #include <fstream>
 #include <string>
 
