@@ -1,0 +1,107 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <queue>
+#include <string>
+#include <sstream>
+#include <algorithm>
+
+// Klasa-predykat do porównywania rozmiarów wektorów
+class CompareVectorSize {
+public:
+	bool operator()(const std::vector<std::string>& vec1, const std::vector<std::string>& vec2) const {
+		return vec1.front().length() > vec2.front().length();
+	}
+};
+
+// Klasa Mikser2 dziedzicząca po kolejce priorytetowej wektorów
+class Mikser2 : public std::priority_queue<std::vector<std::string>, std::vector<std::vector<std::string>>, CompareVectorSize> {
+public:
+	Mikser2() {} // Konstruktor domyślny
+	Mikser2(const char* filename); // Konstruktor jednoargumentowy
+	~Mikser2() {} // Destruktor
+
+	void open(const char* filename);
+	void write(const char* filename);
+};
+
+// Implementacja konstruktora jednoargumentowego
+Mikser2::Mikser2(const char* filename) {
+	open(filename);
+}
+
+// Metoda open
+void Mikser2::open(const char* filename) {
+	std::ifstream in(filename);
+	std::string line;
+
+	while (std::getline(in, line)) {
+		// Pomijaj puste linie
+		if (!line.empty()) {
+			std::vector<std::string> wordVector;
+			std::string word;
+			std::istringstream iss(line);
+
+			// Wczytaj słowa z wiersza do wektora
+			while (iss >> word) {
+				wordVector.push_back(word);
+			}
+
+			// Posortuj słowa alfabetycznie
+			std::sort(wordVector.begin(), wordVector.end());
+
+			// Dodaj wektor do kolejki priorytetowej
+			push(wordVector);
+		}
+	}
+}
+
+// Metoda write
+void Mikser2::write(const char* filename) {
+	std::ofstream out(filename);
+
+	// Kolejka pomocnicza do odwrócenia kolejności wypisywania
+	std::priority_queue<std::vector<std::string>, std::vector<std::vector<std::string>>, CompareVectorSize> reversedQueue;
+
+	// Kopiowanie elementów z głównej kolejki do kolejki pomocniczej
+	while (!empty()) {
+		std::vector<std::string> wordVector = top();
+		pop();
+
+		// Sprawdzenie czy wektor nie jest pusty przed dodaniem go do kolejki pomocniczej
+		if (!wordVector.empty()) {
+			reversedQueue.push(wordVector);
+		}
+	}
+
+	// Wypisanie w kolejności od najmniejszej liczby do największej
+	while (!reversedQueue.empty()) {
+		std::vector<std::string> wordVector = reversedQueue.top();
+		reversedQueue.pop();
+
+		// Sprawdzenie czy wektor ma co najmniej jeden element przed korzystaniem z dowolnego indeksu
+		if (!wordVector.empty()) {
+			// Wypisanie sformatowanego wiersza do strumienia wyjściowego
+			out << wordVector.front().length() << ": ";
+			for (const std::string& word : wordVector) {
+				out << word << " ";
+			}
+			out << "\n";
+		}
+	}
+}
+
+
+
+
+
+
+int main() {
+	// Utwórz obiekt klasy Mikser2 i wczytaj plik "quovadis.txt"
+	Mikser2 mikser2("quovadis.txt");
+
+	// Zapisz zawartość do pliku za pomocą metody write
+	mikser2.write("output2.txt");
+
+	return 0;
+}
