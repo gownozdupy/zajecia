@@ -1,0 +1,85 @@
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <queue>
+#include <string>
+#include <sstream>
+
+
+// Klasa-predykat do porównywania długości pierwszego słowa dwóch list
+class CompareListLength {
+public:
+	bool operator()(const std::list<std::string>& list1, const std::list<std::string>& list2) const {
+		return list1.front().length() < list2.front().length();
+	}
+};
+
+// Klasa Mikser dziedzicząca po kolejce priorytetowej list
+class Mikser : public std::priority_queue<std::list<std::string>, std::vector<std::list<std::string>>, CompareListLength> {
+public:
+	Mikser() {} // Konstruktor domyślny
+	Mikser(const char* filename); // Konstruktor jednoargumentowy
+	~Mikser() {} // Destruktor
+
+	void open(const char* filename);
+	void write(const char* filename);
+};
+
+// Implementacja konstruktora jednoargumentowego
+Mikser::Mikser(const char* filename) {
+	open(filename);
+}
+
+// Metoda open
+void Mikser::open(const char* filename) {
+	std::ifstream in(filename);
+	std::string line;
+
+	while (std::getline(in, line)) {
+		// Pomijaj puste linie
+		if (!line.empty()) {
+			std::list<std::string> wordList;
+			std::string word;
+			std::istringstream iss(line);
+
+			// Wczytaj słowa z wiersza
+			while (iss >> word) {
+				wordList.push_back(word);
+			}
+
+			// Posortuj słowa alfabetycznie malejąco
+			wordList.sort(std::greater<std::string>());
+
+			// Dodaj listę do kolejki priorytetowej
+			push(wordList);
+		}
+	}
+}
+
+// Metoda write
+void Mikser::write(const char* filename) {
+	std::ofstream out(filename);
+
+	while (!empty()) {
+		// Zdejmowanie kolejnych elementów z kolejki
+		std::list<std::string> wordList = top();
+		pop();
+
+		// Wypisanie sformatowanego wiersza do strumienia wyjściowego
+		out << wordList.front().length() << ": ";
+		for (const std::string& word : wordList) {
+			out << word << " ";
+		}
+		out << "\n";
+	}
+}
+
+int main() {
+	// Utwórz obiekt klasy Mikser i wczytaj plik "mistrz.txt"
+	Mikser mikser("mistrz.txt");
+
+	// Zapisz zawartość do pliku za pomocą metody write
+	mikser.write("output.txt");
+
+	return 0;
+}
