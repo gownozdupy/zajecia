@@ -1,0 +1,124 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <algorithm>
+#include <random>
+#include <iterator>
+
+
+using namespace std;
+
+
+//klasa do generowania liczb losowych z różnych rozkładów
+class GeneratorLiczbLosowych {
+protected:
+	static random_device rd;
+};
+
+random_device GeneratorLiczbLosowych::rd;
+
+//klasa do generowania liczb z rozkładu normalnego N(mi, sigma)
+class LosowaNormalna : public GeneratorLiczbLosowych {
+	normal_distribution<double> rozklad;
+public:
+	LosowaNormalna(double mi, double sigma) : rozklad(mi, sigma) {}
+	double operator()() { return rozklad(rd); }
+};
+
+//funkcja generująca liczby losowe z rozkładu normalnego N(5, 10)
+double generujLiczbeLosowa() {
+	LosowaNormalna losowa(5, 10);
+	return losowa();
+}
+
+//klasa reprezentująca punkt w przestrzeni n-wymiarowej
+class Punkt {
+public:
+	vector<double> wspolrzedne;
+
+	//konstruktor domyślny
+	Punkt() = default;
+
+	//konstruktor z liczbą wymiarów
+	Punkt(int liczbaWymiarow) : wspolrzedne(liczbaWymiarow) {
+		generate(wspolrzedne.begin(), wspolrzedne.end(), generujLiczbeLosowa);
+	}
+};
+
+//funktor arytmetyczny dodawania dwóch punktów
+struct DodajPunkty {
+	Punkt operator()(const Punkt& a, const Punkt& b) const {
+		Punkt wynik;
+		wynik.wspolrzedne.resize(a.wspolrzedne.size());
+		transform(a.wspolrzedne.begin(), a.wspolrzedne.end(), b.wspolrzedne.begin(), wynik.wspolrzedne.begin(), plus<>());
+		return wynik;
+	}
+};
+
+//funktor arytmetyczny mnożenia punktu przez stałą
+struct PomnozPunktPrzezStala {
+	double stala;
+
+	PomnozPunktPrzezStala(double s) : stala(s) {}
+
+	Punkt operator()(const Punkt& p) const {
+		Punkt wynik;
+		wynik.wspolrzedne.resize(p.wspolrzedne.size());
+		transform(p.wspolrzedne.begin(), p.wspolrzedne.end(), wynik.wspolrzedne.begin(), [this](double x) { return x * stala; });
+		return wynik;
+	}
+};
+
+int main() {
+	int liczbaWymiarow;
+	cout << "Podaj liczbe wymiarow (n): ";
+	cin >> liczbaWymiarow;
+
+	if (liczbaWymiarow <= 0) {
+		cerr << "Liczba wymiarow musi byc wieksza od zera." << endl;
+		return 1;
+	}
+
+	//generowanie chmury punktów
+	const int rozmiarChmury = 100;
+
+	vector<Punkt> chmuraA(rozmiarChmury, Punkt(liczbaWymiarow));
+
+	//obliczenie centroidu chmury A
+	Punkt centroidA = accumulate(chmuraA.begin(), chmuraA.end(), Punkt(liczbaWymiarow), DodajPunkty());
+	centroidA = PomnozPunktPrzezStala(1.0 / rozmiarChmury)(centroidA);
+
+	//wypisanie współrzędnych centroidu A
+	cout << "Centroid chmury A: ";
+	for (const auto& wsp : centroidA.wspolrzedne) {
+		cout << wsp << " ";
+	}
+	cout << endl;
+
+	//generowanie chmury A' poprzez symetrię względem centroidu
+	vector<Punkt> chmuraAprime(rozmiarChmury);
+	transform(chmuraA.begin(), chmuraA.end(), chmuraAprime.begin(), [centroidA](const Punkt& p) {
+		return DodajPunkty()(PomnozPunktPrzezStala(2.0)(centroidA), PomnozPunktPrzezStala(-1.0)(p));
+	});
+
+	//obliczenie centroidu chmury A'
+	Punkt centroidAprime = accumulate(chmuraAprime.begin(), chmuraAprime.end(), Punkt(liczbaWymiarow), DodajPunkty());
+	centroidAprime = PomnozPunktPrzezStala(1.0 / rozmiarChmury)(centroidAprime);
+
+	//wypisanie współrzędnych centroidu A'
+	cout << "Centroid chmury A': ";
+	for (const auto& wsp : centroidAprime.wspolrzedne) {
+		cout << wsp << " ";
+	}
+	cout << endl;
+
+	//sprawdzenie, czy centroidA i centroidAprime mają takie same współrzędne
+	if (centroidA.wspolrzedne == centroidAprime.wspolrzedne) {
+		cout << "Wspolrzedne centroidu A i A' sa takie same." << endl;
+	}
+	else {
+		cout << "Wspolrzedne centroidu A i A' sa rozne." << endl;
+	}
+
+	return 0;
+}
