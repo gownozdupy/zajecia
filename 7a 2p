@@ -1,0 +1,96 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <random>
+#include <cmath>
+
+// Struktura reprezentująca punkt w n-wymiarowej przestrzeni
+struct Punkt {
+    std::vector<double> wspolrzedne;
+
+    // Konstruktor, który inicjalizuje punkt o zadanej liczbie współrzędnych
+    explicit Punkt(size_t wymiary) : wspolrzedne(wymiary) {}
+};
+
+// Generator liczb losowych o rozkładzie normalnym N(5,10)
+class GeneratorRozkladuNormalnego {
+private:
+    std::default_random_engine generator;
+    std::normal_distribution<double> rozklad;
+
+public:
+    GeneratorRozkladuNormalnego(double srednia, double odchylenie_standardowe) : rozklad(srednia, odchylenie_standardowe) {}
+
+    double operator()() {
+        return rozklad(generator);
+    }
+};
+
+// Funktor obliczający odległość euklidesową między dwoma punktami
+struct OdlegloscEuklidesowa {
+    double operator()(const Punkt &p1, const Punkt &p2) const {
+        double sumaKwadratow = 0.0;
+        for (size_t i = 0; i < p1.wspolrzedne.size(); ++i) {
+            sumaKwadratow += std::pow(p1.wspolrzedne[i] - p2.wspolrzedne[i], 2);
+        }
+        return std::sqrt(sumaKwadratow);
+    }
+};
+
+int main() {
+    // ... (reszta kodu pozostaje bez zmian)
+
+    // Krok 6: Obliczenie promienia R i liczby punktów w odległości poniżej i powyżej R/2 dla chmury A
+    double promienA = 0.0;
+    Punkt centroidA(wymiary);
+    // Obliczenie promienia R
+    for (const Punkt &punkt : chmuraA) {
+        double odleglosc = OdlegloscEuklidesowa()(punkt, centroidA);
+        promienA = std::max(promienA, odleglosc);
+    }
+
+    // Obliczenie liczby punktów w odległości poniżej i powyżej R/2
+    int punktyPonizejA = std::count_if(chmuraA.begin(), chmuraA.end(),
+                                      [&centroidA, promienA](const Punkt &punkt) {
+                                          return OdlegloscEuklidesowa()(punkt, centroidA) < promienA / 2.0;
+                                      });
+
+    int punktyPowyzejA = chmuraA.size() - punktyPonizejA;
+
+    // Krok 7: Wypisanie wyników dla chmury A
+    std::cout << "Promien R dla chmury A: " << promienA << std::endl;
+    std::cout << "Liczba punktów w odległości poniżej R/2: " << punktyPonizejA << std::endl;
+    std::cout << "Liczba punktów w odległości powyżej R/2: " << punktyPowyzejA << std::endl;
+
+    // Krok 8: Obliczenie promienia R i liczby punktów w odległości poniżej i powyżej R/2 dla chmury A'
+    double promienAprime = 0.0;
+    Punkt centroidAprime(wymiary);
+    // Obliczenie promienia R
+    for (const Punkt &punkt : chmuraAprime) {
+        double odleglosc = OdlegloscEuklidesowa()(punkt, centroidAprime);
+        promienAprime = std::max(promienAprime, odleglosc);
+    }
+
+    // Obliczenie liczby punktów w odległości poniżej i powyżej R/2
+    int punktyPonizejAprime = std::count_if(chmuraAprime.begin(), chmuraAprime.end(),
+                                            [&centroidAprime, promienAprime](const Punkt &punkt) {
+                                                return OdlegloscEuklidesowa()(punkt, centroidAprime) < promienAprime / 2.0;
+                                            });
+
+    int punktyPowyzejAprime = chmuraAprime.size() - punktyPonizejAprime;
+
+    // Krok 9: Wypisanie wyników dla chmury A'
+    std::cout << "Promien R dla chmury A': " << promienAprime << std::endl;
+    std::cout << "Liczba punktów w odległości poniżej R/2: " << punktyPonizejAprime << std::endl;
+    std::cout << "Liczba punktów w odległości powyżej R/2: " << punktyPowyzejAprime << std::endl;
+
+    // Krok 10: Porównanie wyników
+    if (promienA == promienAprime && punktyPonizejA == punktyPonizejAprime && punktyPowyzejA == punktyPowyzejAprime) {
+        std::cout << "Wyniki dla chmur A i A' są identyczne." << std::endl;
+    } else {
+        std::cout << "Wyniki dla chmur A i A' są różne." << std::endl;
+    }
+
+    return 0;
+}
