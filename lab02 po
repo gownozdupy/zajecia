@@ -1,0 +1,455 @@
+ 1pA
+#include <stdio.h>
+#define MAX 5
+
+void info(void) {
+	printf("Program szyfruje tekst wprowadzany przez uzytkownika.\nAutor: Anna Prusakow.\n");
+}
+
+void wpisz_do_tab(char T[25], char A[MAX][MAX], char* B[25]) {
+	for (int i = 0; i < MAX; ++i) {
+		for (int j = 0; j < MAX; ++j) {
+			for (int k = 0; k < 25; ++k) {
+				if (T[k] == A[i][j]) {
+					B[k] = &A[i][j];			//do tablicy wskaznikowej zapisuje adres komorek odpowiadajacych literom alfabetu z tab a
+				}
+			}
+		}
+	}
+
+}
+
+void wypisz(char* tab[MAX*MAX]) {						
+	for (int k = 0; k < MAX*MAX; ++k) {
+		if (tab[k] != NULL)
+		{
+			printf("%c", *tab[k]);
+		}
+	}
+}
+
+void wpisz_do_C(char* B[], char* C[]) {
+	int j = 0;
+	int l = 1;
+		for (int i = 0; i < MAX*MAX; ++i) {
+			if (B[i] == NULL) {
+				j = i - 1;
+				break;
+			}
+			C[i] = B[j];
+			j+=2;
+		}
+		for (int i=0; i < MAX*MAX; ++i) {
+			if (B[i] == NULL) {
+				break;
+			}
+			if (C[i] == NULL) {
+				C[i] = B[l];
+				l += 2;
+			}
+		}
+}
+
+int main() {
+	info();
+	char A[MAX][MAX] = { {'a', 'f', 'k', 'p', 'v'},				//recznie wpisane litery alfabetu do tabeli A
+					{'b', 'g', 'l', 'r', 'w'},
+					{'c', 'h', 'm', 's', 'x'},
+					{'d', 'i', 'n', 't', 'y'},
+					{'e', 'j', 'o', 'u', 'z'} };
+	char *B[MAX*MAX] = {NULL};
+	printf("Podaj T (bez spacji, tylko male litery, nie dluzszy niz 25):\t");
+	char T[MAX*MAX];			//tablica pomocnicza, dlugosc max Tu to 25 (25 dostepnych do wyboru liter)
+	scanf_s("%s", T, 25);
+	wpisz_do_tab(T, A, B);
+	printf("\nTwoje slowo przed zaszyfrowaniem: ");
+	wypisz(B);
+	char* C[MAX*MAX] = { NULL };
+	wpisz_do_C(B, C);
+	printf("\nTwoje slowo po zaszyfrowaniu: ");
+	wypisz(C);
+	printf("\n\nKoniec.\n");
+}
+
+
+2pA
+#include <stdio.h>
+#define MAX 5
+
+void info(void) {
+	printf("Program szyfruje tekst wprowadzany przez uzytkownika.\nAutor: Anna Prusakow.\n");
+}
+
+void wpisz_do_tab(char T[25], char A[MAX][MAX], char* B[25]) {
+	for (int i = 0; i < MAX; ++i) {
+		for (int j = 0; j < MAX; ++j) {
+			for (int k = 0; k < MAX*MAX; ++k) {
+				if (T[k] == A[i][j]) {
+					B[k] = &A[i][j];            // do tablicy wskaznikowej zapisuje adres komorek odpowiadajacych literom alfabetu z tab a
+				}
+			}
+		}
+	}
+}
+
+void wypisz(char* tab[]) {
+	for (int k = 0; k < MAX*MAX; ++k) {
+		if (tab[k] != NULL) {
+			printf("%c", *tab[k]);
+		}
+	}
+}
+
+void koryguj_adresy(char* B[], char* B2[], char A[][MAX]) {
+	for (int k = 0; k < MAX * MAX; ++k) {
+		if (B[k] != NULL) {
+			if (B[k] == &A[MAX-1][0] || B[k] == &A[MAX - 1][1] || B[k] == &A[MAX - 1][2] || B[k] == &A[MAX - 1][3] || B[k] == &A[MAX - 1][4]) {
+				B2[k] = B[k] - 20;
+			}
+			else {
+				B2[k] = B[k] + 5;
+			}
+		}
+	}
+}
+
+void przestaw(char A[][MAX]) {
+	char temp[MAX];                                         // pomocnicza tablica
+	char temp1[MAX];                                        // pomocnicza tablica dzieki ktorej zamienimy 1 i ostatni wiersz
+
+	for (int j = 0; j < MAX; j++) {
+		temp1[j] = A[MAX-1][j];
+	}
+
+	for (int i = MAX-1; i > 0; i--) {
+		for (int j = 0; j < MAX; j++) {
+			temp[j] = A[i-1][j];
+			A[i][j] = temp[j];
+		}
+	}
+
+	for (int j = 0; j < MAX; j++) {
+		A[0][j] = temp1[j];
+	}
+}
+
+
+int main() {
+	info();
+	char A[MAX][MAX] = { {'a', 'b', 'c', 'd', 'e'},               // abcde     uwxyz
+						 {'f', 'g', 'h', 'i', 'j'},               // fghij     abcde
+						 {'k', 'l', 'm', 'n', 'o'},               // klmno     fghij
+						 {'p', 'q', 'r', 's', 't'},               // pqrst     klmno
+						 {'u', 'w', 'x', 'y', 'z'} };             // uwxyz     pqrst
+	char* B[MAX * MAX] = { NULL };
+	printf("Podaj T (bez spacji, tylko male litery, nie dluzszy niz 25):\t");
+	char T[MAX * MAX];         // tablica pomocnicza, dlugosc max Tu to 25 (25 dostepnych do wyboru liter)
+	scanf_s("%s", T, 25);
+	wpisz_do_tab(T, A, B);
+	printf("\nTwoje slowo przed zaszyfrowaniem: ");
+	wypisz(B);
+	przestaw(A);
+	char* B2[MAX * MAX] = { NULL };
+	printf("\nTwoje slowo po zaszyfrowaniu: ");
+	wypisz(B);
+	koryguj_adresy(B, B2, A);
+	printf("\nTwoje slowo po odszyfrowaniu: ");
+	wypisz(B2);
+
+	printf("\n\nKoniec.\n");
+}
+
+
+ 1pB
+#include <stdio.h>
+#define MAX 5
+
+void info(void) {
+	printf("Program szyfruje tekst wprowadzany przez uzytkownika.\nAutor: Anna Prusakow.\n");
+}
+
+void wpisz_do_tab(char T[25], char A[MAX][MAX], char* B[25]) {
+	for (int i = 0; i < MAX; ++i) {
+		for (int j = 0; j < MAX; ++j) {
+			for (int k = 0; k < 25; ++k) {
+				if (T[k] == A[i][j]) {
+					B[k] = &A[i][j];			//do tablicy wskaznikowej zapisuje adres komorek odpowiadajacych literom alfabetu z tab a
+				}
+			}
+		}
+	}
+
+}
+
+void wypisz(char* tab[MAX*MAX]) {
+	for (int k = 0; k < MAX*MAX; ++k) {
+		if (tab[k] != NULL)
+		{
+			printf("%c", *tab[k]);
+		}
+	}
+}
+
+void wpisz_do_C(char* B[], char* C[]){
+	int j;
+	for (int i = 0; i < MAX*MAX; ++i) {
+		if (B[i] == NULL) {
+			j = i;
+			break;
+		}
+	}
+	for (int i = 0; i <= j; ++i) {
+		C[i] = B[j - i];
+		}
+}
+
+int main() {
+	info();
+	char A[MAX][MAX] = { {'a', 'f', 'k', 'p', 'v'},				//recznie wpisane litery alfabetu do tabeli A
+					{'b', 'g', 'l', 'r', 'w'},
+					{'c', 'h', 'm', 's', 'x'},
+					{'d', 'i', 'n', 't', 'y'},
+					{'e', 'j', 'o', 'u', 'z'} };
+	char *B[MAX*MAX] = { NULL };
+	printf("Podaj T (bez spacji, tylko male litery, nie dluzszy niz 25):\t");
+	char T[MAX*MAX];			//tablica pomocnicza, dlugosc max Tu to 25 (25 dostepnych do wyboru liter)
+	scanf_s("%s", T, 25);
+	wpisz_do_tab(T, A, B);
+	printf("\nTwoje slowo przed zaszyfrowaniem: ");
+	wypisz(B);
+	char* C[MAX*MAX] = { NULL };
+	wpisz_do_C(B, C);
+	printf("\nTwoje slowo po zaszyfrowaniu: ");
+	wypisz(C);
+	printf("\n\nKoniec.\n");
+}
+2pB
+
+#include <stdio.h>
+#define MAX 5
+
+void info(void) {
+	printf("Program szyfruje tekst wprowadzany przez uzytkownika.\nAutor: Anna Prusakow.\n");
+}
+
+void wpisz_do_tab(char T[25], char A[MAX][MAX], char* B[25]) {
+	for (int i = 0; i < MAX; ++i) {
+		for (int j = 0; j < MAX; ++j) {
+			for (int k = 0; k < MAX*MAX; ++k) {
+				if (T[k] == A[i][j]) {
+					B[k] = &A[i][j];            // do tablicy wskaznikowej zapisuje adres komorek odpowiadajacych literom alfabetu z tab a
+				}
+			}
+		}
+	}
+}
+
+void wypisz(char* tab[]) {
+	for (int k = 0; k < MAX*MAX; ++k) {
+		if (tab[k] != NULL) {
+			printf("%c", *tab[k]);
+		}
+	}
+}
+
+void koryguj_adresy(char* B[], char* B2[], char A[][MAX]) {
+	for (int k = 0; k < MAX * MAX; ++k) {
+		if (B[k] != NULL) {
+			if (B[k] == &A[0][0] || B[k] == &A[0][1] || B[k] == &A[0][2] || B[k] == &A[0][3] || B[k] == &A[0][4]) {
+				B2[k] = B[k] + 20;
+			}
+			else {
+				B2[k] = B[k] - 5;
+			}
+		}
+	}
+}
+
+void przestaw(char A[][MAX]) {
+	char temp[MAX];                                         // pomocnicza tablica
+	char temp1[MAX];                                        // pomocnicza tablica dzieki ktorej zamienimy 1 i ostatni wiersz
+
+	for (int j = 0; j < MAX; j++) {
+		temp1[j] = A[0][j];
+	}
+
+	for (int i = 0; i < MAX - 1; i++) {
+		for (int j = 0; j < MAX; j++) {
+			temp[j] = A[i + 1][j];
+			A[i][j] = temp[j];
+		}
+	}
+
+	for (int j = 0; j < MAX; j++) {
+		A[MAX - 1][j] = temp1[j];
+	}
+}
+
+int main() {
+	info();
+	char A[MAX][MAX] = { {'a', 'b', 'c', 'd', 'e'},               // abcde     fghij
+						 {'f', 'g', 'h', 'i', 'j'},               // fghij     klmno
+						 {'k', 'l', 'm', 'n', 'o'},               // klmno     pqrst
+						 {'p', 'q', 'r', 's', 't'},               // pqrst     uwxyz
+						 {'u', 'w', 'x', 'y', 'z'} };             // uwxyz     abdce
+	char* B[MAX * MAX] = { NULL };
+	printf("Podaj T (bez spacji, tylko male litery, nie dluzszy niz 25):\t");
+	char T[MAX * MAX];         // tablica pomocnicza, dlugosc max Tu to 25 (25 dostepnych do wyboru liter)
+	scanf_s("%s", T, 25);
+	wpisz_do_tab(T, A, B);
+	printf("\nTwoje slowo przed zaszyfrowaniem: ");
+	wypisz(B);
+	przestaw(A);
+	char* B2[MAX * MAX] = { NULL };
+	printf("\nTwoje slowo po zaszyfrowaniu: ");
+	wypisz(B);
+	koryguj_adresy(B, B2, A);
+	printf("\nTwoje slowo po odszyfrowaniu: ");
+	wypisz(B2);
+
+	printf("\n\nKoniec.\n");
+}
+
+1pc
+#include <stdio.h>
+#define MAX 5
+
+void info(void) {
+	printf("Program szyfruje tekst wprowadzany przez uzytkownika.\nAutor: Anna Prusakow.\n");
+}
+
+void wpisz_do_tab(char T[25], char A[MAX][MAX], char* B[25]) {
+	for (int i = 0; i < MAX; ++i) {
+		for (int j = 0; j < MAX; ++j) {
+			for (int k = 0; k < 25; ++k) {
+				if (T[k] == A[i][j]) {
+					B[k] = &A[i][j];			//do tablicy wskaznikowej zapisuje adres komorek odpowiadajacych literom alfabetu z tab a
+				}
+			}
+		}
+	}
+
+}
+
+void wypisz(char* tab[MAX*MAX]) {
+	for (int k = 0; k < MAX*MAX; ++k) {
+		if (tab[k] != NULL)
+		{
+			printf("%c", *tab[k]);
+		}
+	}
+}
+
+void wpisz_do_C(char* B[], char* C[]) {
+	int j;
+	for (int i = 0; i < MAX*MAX; ++i) {
+		if (B[i] == NULL) {
+			j = i;
+			break;
+		}
+		if (*B[i] != 'a' && *B[i] != 'e' && *B[i] != 'o' && *B[i] != 'i' && *B[i] != 'u' && *B[i] != 'y') {
+			C[i] = B[i];
+		}
+	}
+}
+
+int main() {
+	info();
+	char A[MAX][MAX] = { {'a', 'f', 'k', 'p', 'v'},				//recznie wpisane litery alfabetu do tabeli A
+					{'b', 'g', 'l', 'r', 'w'},
+					{'c', 'h', 'm', 's', 'x'},
+					{'d', 'i', 'n', 't', 'y'},
+					{'e', 'j', 'o', 'u', 'z'} };
+	char *B[MAX*MAX] = { NULL };
+	printf("Podaj T (bez spacji, tylko male litery, nie dluzszy niz 25):\t");
+	char T[MAX*MAX];			//tablica pomocnicza, dlugosc max Tu to 25 (25 dostepnych do wyboru liter)
+	scanf_s("%s", T, 25);
+	wpisz_do_tab(T, A, B);
+	printf("\nTwoje slowo przed zaszyfrowaniem: ");
+	wypisz(B);
+	char* C[MAX*MAX] = { NULL };
+	wpisz_do_C(B, C);
+	printf("\nTwoje slowo po zaszyfrowaniu: ");
+	wypisz(C);
+	printf("\n\nKoniec.\n");
+}
+#include <stdio.h>
+#define MAX 5
+
+void info(void) {
+	printf("Program szyfruje tekst wprowadzany przez uzytkownika.\nAutor: Anna Prusakow.\n");
+}
+
+void wpisz_do_tab(char T[25], char A[MAX][MAX], char* B[25]) {
+	for (int i = 0; i < MAX; ++i) {
+		for (int j = 0; j < MAX; ++j) {
+			for (int k = 0; k < MAX*MAX; ++k) {
+				if (T[k] == A[i][j]) {
+					B[k] = &A[i][j];            // do tablicy wskaznikowej zapisuje adres komorek odpowiadajacych literom alfabetu z tab a
+				}
+			}
+		}
+	}
+}
+
+void wypisz(char* tab[]) {
+	for (int k = 0; k < MAX*MAX; ++k) {
+		if (tab[k] != NULL) {
+			printf("%c", *tab[k]);
+		}
+	}
+}
+
+void koryguj_adresy(char* B[], char* B2[], char A[][MAX]) {
+	for (int i = 0; i < MAX*MAX; ++i) {
+		if (B[i] != NULL) {
+			int shift = (B[i]>=&A[3][0] && B[i]<=&A[4][MAX]) ? -15 : 10;
+			B2[i] = B[i] + shift;
+		}
+	}
+}
+
+void przestaw(char A[][MAX]) {
+	char temp[MAX][MAX];
+
+
+	for (int i = 0; i < MAX; i++) {
+		for (int j = 0; j < MAX; j++) {
+			temp[i][j] = A[(i + 3) % MAX][j];
+		}
+	}
+	printf("\nNowy A:\n");
+
+	for (int i = 0; i < MAX; i++) {
+		for (int j = 0; j < MAX; j++) {
+			A[i][j] = temp[i][j];
+			printf("%c ", A[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
+int main() {
+	info();
+	char A[MAX][MAX] = { {'a', 'b', 'c', 'd', 'e'},               // abcde  0-2   pqrst	
+						 {'f', 'g', 'h', 'i', 'j'},               // fghij  1-3   uwxyz	
+						 {'k', 'l', 'm', 'n', 'o'},               // klmno  2-4   abcde	
+						 {'p', 'q', 'r', 's', 't'},               // pqrst  3-0   fghij	
+						 {'u', 'w', 'x', 'y', 'z'} };             // uwxyz  4-1   klmno	
+	char* B[MAX * MAX] = { NULL };
+	printf("Podaj T (bez spacji, tylko male litery, nie dluzszy niz 25):\t");
+	char T[MAX * MAX];         // tablica pomocnicza, dlugosc max Tu to 25 (25 dostepnych do wyboru liter)
+	scanf_s("%s", T, 25);
+	wpisz_do_tab(T, A, B);
+	printf("\nTwoje slowo przed zaszyfrowaniem: ");
+	wypisz(B);
+	przestaw(A);
+	char* B2[MAX * MAX] = { NULL };
+	printf("\nTwoje slowo po zaszyfrowaniu: ");
+	wypisz(B);
+	koryguj_adresy(B, B2, A);
+	printf("\nTwoje slowo po odszyfrowaniu: ");
+	wypisz(B2);
+	printf("\n\nKoniec.\n");
+}
