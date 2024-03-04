@@ -1,0 +1,142 @@
+#include <stdio.h>
+#include <math.h>
+
+
+struct Trojkaty {
+	char czyTrojkat;
+	int nr;
+	float pole;
+};
+
+struct Trojkaty fun(float (*tab)[3], int n) {
+	struct Trojkaty wynik = { 'n', -1, -1 }; 
+	for (int i = 0; i < n; i++) {
+	float a = tab[i][0];
+	float b = tab[i][1];
+	float c = tab[i][2];
+		if ((a + b > c) && (a + c > b) && (b + c > a)) {
+			printf("Mozna zbudowac trojkat o numerze %d\n", i+1);
+			//obliczenie połowy obwodu trójkąta
+			float p = (a + b + c) / 2.0;
+			//obliczenie pola trójkąta wzorem Herona
+			float pole = sqrt(p * (p - a) * (p - b) * (p - c));
+			if (wynik.nr == -1 || pole < wynik.pole) {
+				wynik.czyTrojkat = 't';
+				wynik.nr = i + 1;
+				wynik.pole = pole;
+			}
+		}
+		else {
+			printf("Nie mozna zbudowac trojkata %i.\n", i+1);
+		}
+
+	}
+return wynik;
+}
+
+int main() {
+	int n;
+	printf("Podaj liczbe trojek: ");
+	scanf_s("%i", &n);
+	float(*tab)[3] = malloc(n * sizeof(*tab));
+	printf("Podaj dlugosci bokow trojkatow:\n");
+	for (int i = 0; i < n; i++) {
+		printf("\nTrojkat %d: \n", i + 1);
+		scanf_s("%f %f %f", &tab[i][0], &tab[i][1], &tab[i][2]);
+	}
+	printf("\n");
+	struct Trojkaty wynik = fun(tab, n);
+	
+	if (wynik.czyTrojkat == 't') {
+		printf("\nTrojkat z najmniejszym polem to trojkat nr %i.", wynik.nr);
+		printf("\nDlugosci bokow trojkata %i: %.2f, %.2f, %.2f\n", wynik.nr, tab[wynik.nr - 1][0],
+			tab[wynik.nr - 1][1], tab[wynik.nr - 1][2]);
+		printf("Pole tego trojkata: %.2f\n", wynik.pole);
+	}
+	else {
+		printf("\nNie mozna zbudowac zadnego trojkata.\n");
+	}
+	free(tab);
+
+	return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <math.h>
+
+#define MAX_SIZE 100
+
+struct Wynik {
+	int wartosc;
+	char napis[MAX_SIZE];
+};
+
+struct Wynik obliczOsemkowa(char osemkowa[], int n) {
+	struct Wynik wynik = { 0, "" };
+
+	for (int i = 0; i < n; i++) {
+		if (!isdigit(osemkowa[i])){
+			printf("Podales niepoprawny znak.\n");
+			return wynik;
+		}
+		else if (osemkowa[i] < '0' || osemkowa[i] > '7') {
+			printf("Podano cyfre spoza zakresu 0-7.\n");
+				return wynik;
+		}
+	}
+
+	//obliczanie wartości liczby w systemie ósemkowym
+	for (int i = 0; i < n; i++) {
+		wynik.wartosc += (osemkowa[i] - '0') * pow(8, n - i - 1);
+	}
+	//konwersja liczby na napis w systemie dziesiętnym
+	int i = 0;
+	if (wynik.wartosc == 0) {
+		wynik.napis[i++] = '0';
+	}
+	else {
+		int temp = wynik.wartosc;
+		while (temp != 0) {
+			wynik.napis[i++] = temp % 10 + '0';
+			temp /= 10;
+		}
+	}
+	wynik.napis[i] = '\0';
+
+	//odwrócenie napisu, ponieważ konwersja była wykonana od końca
+	int j = 0;
+	i--;
+	while (j < i) {
+		char temp = wynik.napis[j];
+		wynik.napis[j] = wynik.napis[i];
+		wynik.napis[i] = temp;
+		j++;
+		i--;
+	}
+	return wynik;
+}
+
+int main() {
+	char osemkowa[MAX_SIZE];
+	int n;
+
+	printf("Podaj liczbe w systemie osemkowym: ");
+	scanf_s("%s", osemkowa, sizeof(osemkowa));
+	for (n = 0; osemkowa[n] != '\0'; n++);//obliczanie długości ciągu znaków
+	struct Wynik wynik = obliczOsemkowa(osemkowa, n);
+
+	if (wynik.wartosc != 0) {
+		printf("Wartosc w systemie dziesietnym: %d\n", wynik.wartosc);
+		printf("Napis w systemie dziesietnym: %s\n", wynik.napis);
+	}
+
+	return 0;
+}
+
