@@ -1,0 +1,137 @@
+
+#include <stdio.h>
+#include <string.h>
+#pragma warning( disable : 4996 )
+#define MAX_SIZE 100
+
+
+void zamien(char tab[]) {
+
+	char *p = tab;
+	while (*p != '\0')     
+	{
+		if (isalpha(*p)) {
+			*p = toupper(*p);
+			if (*p == 'Z') {
+				*p = 'A';
+			}
+			++*p;
+			p++;
+		}
+		else {
+			p++;
+		}
+	}
+}
+
+int main() {
+	char nazwa_pliku_wej[50], nazwa_pliku_wyj[50];
+	printf("Podaj nazwe pliku z danymi: ");
+	scanf_s("%s", &nazwa_pliku_wej, 48);
+	printf("Podaj nazwe pliku wynikowego: ");
+	scanf_s("%s", &nazwa_pliku_wyj, 48);
+	nazwa_pliku_wej[49] = '\0';
+	nazwa_pliku_wyj[49] = '\0';
+	FILE* plik_wej;
+	FILE* plik_wyj;
+
+	plik_wej = fopen(nazwa_pliku_wej, "r");
+	if (plik_wej == NULL) {
+		printf("Nie udalo sie otworzyc pliku %s\n", nazwa_pliku_wej);
+		return 1;
+	}
+	plik_wyj = fopen(nazwa_pliku_wyj, "w");
+	if (plik_wyj == NULL) {
+		printf("Nie udalo sie otworzyc pliku %s\n", nazwa_pliku_wyj);
+		return 1;
+	}
+
+	char slowo[MAX_SIZE];
+	while (fscanf(plik_wej, "%s", slowo) == 1) {
+		zamien(slowo);
+		fprintf(plik_wyj, "%s ", slowo);
+	}
+	fclose(plik_wej);
+	fclose(plik_wyj);
+	return 0;
+}
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#pragma warning( disable : 4996 )
+#define MAX_SIZE 100
+
+
+void szyfrCezara(char tab[], int n) {
+	char *p = tab;
+	while (*p != '\0') {
+		if (isalpha(*p)) {
+			*p = toupper(*p);
+			*p = ((*p - 'A' + n) % 26) + 'A'; 
+		}
+		p++;
+	}
+}
+
+void odszyfruj(char tab[], int n) {
+	char *p = tab;
+	while (*p != '\0') {
+		if (isalpha(*p)) {
+			*p = toupper(*p);
+			*p = ((*p - 'A' - n + 26) % 26) + 'A'; 
+		}
+		p++;
+	}
+}
+
+
+int main() {
+	char nazwa_pliku_wej[50], nazwa_pliku_wyj[50];
+	printf("Podaj nazwe pliku z danymi: ");
+	scanf_s("%s", &nazwa_pliku_wej, 48);
+	printf("Podaj nazwe pliku wynikowego: ");
+	scanf_s("%s", &nazwa_pliku_wyj, 48);
+	nazwa_pliku_wej[49] = '\0';
+	nazwa_pliku_wyj[49] = '\0';
+	FILE* plik_wej;
+	FILE* plik_wyj;
+
+	plik_wej = fopen(nazwa_pliku_wej, "r");
+	if (plik_wej == NULL) {
+		printf("Nie udalo sie otworzyc pliku %s\n", nazwa_pliku_wej);
+		return 1;
+	}
+	plik_wyj = fopen(nazwa_pliku_wyj, "w");
+	if (plik_wyj == NULL) {
+		printf("Nie udalo sie otworzyc pliku %s\n", nazwa_pliku_wyj);
+		return 1;
+	}
+	int n;
+	printf("\nPodaj liczbe n przesuniec w szyfrze Cezara (nie wiecej niz 31): ");
+	scanf_s("%i", &n);
+
+	char slowo[MAX_SIZE];
+	while (fscanf(plik_wej, "%s", slowo) == 1) {
+		szyfrCezara(slowo, n);
+		fprintf(plik_wyj, "%s ", slowo);
+	}
+	fclose(plik_wej);
+	fclose(plik_wyj);
+
+	plik_wyj = fopen(nazwa_pliku_wyj, "r");
+	if (plik_wyj == NULL) {
+		printf("Nie udalo sie otworzyc pliku %s\n", nazwa_pliku_wyj);
+		return 1;
+	}
+
+	while (fscanf(plik_wyj, "%s", slowo) == 1) {
+		odszyfruj(slowo, n);
+		printf("%s ", slowo);
+	}
+	fclose(plik_wyj);
+
+	return 0;
+}
