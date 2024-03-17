@@ -1,0 +1,270 @@
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning( disable : 4996 )
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct pojazd {
+	char marka[40];
+	char model[40];
+	int rok_produkcji;
+	float pojemnosc_silnika;
+};
+
+int policz_wiersze(FILE *plik) {
+	int liczba_wierszy = 0;
+	char buffer[100]; // zakladamy, że linia w pliku nie bedzie dluższa niż 100 znaków
+
+	while (fgets(buffer, sizeof(buffer), plik) != NULL) {
+		liczba_wierszy++;
+	}
+
+	rewind(plik); // ustawienie wskaźnika na poczatek pliku
+	return liczba_wierszy;
+}
+
+struct pojazd *wczytaj_zawartosc(const char *nazwa_pliku, int liczba_wierszy) {
+	FILE *plik = fopen(nazwa_pliku, "r");
+	if (plik == NULL) {
+		printf("Blad otwarcia pliku.\n");
+		exit(0);
+	}
+
+	struct pojazd *tablica = malloc(liczba_wierszy * sizeof(struct pojazd));
+	if (tablica == NULL) {
+		printf("Blad alokacji pamieci.\n");
+		exit(0);
+	}
+
+	for (int i = 0; i < liczba_wierszy; i++) {
+		fscanf(plik, "%s %s %d %f", tablica[i].marka, tablica[i].model, &tablica[i].rok_produkcji, &tablica[i].pojemnosc_silnika);
+	}
+
+	fclose(plik);
+	return tablica;
+}
+
+void wypisz_zawartosc(struct pojazd *tablica, int rozmiar) {
+	for (int i = 0; i < rozmiar; i++) {
+		printf("Marka: %s, Model: %s, Rok produkcji: %d, Pojemnosc silnika: %.2f\n",
+			tablica[i].marka, tablica[i].model, tablica[i].rok_produkcji, tablica[i].pojemnosc_silnika);
+	}
+}
+
+struct pojazd *powieksz_tablice(struct pojazd *tablica, int *rozmiar) {
+	(*rozmiar)++;
+	struct pojazd *nowa_tablica = realloc(tablica, (*rozmiar) * sizeof(struct pojazd));
+	if (nowa_tablica == NULL) {
+		nowa_tablica = malloc((*rozmiar) * sizeof(struct pojazd));
+		if (nowa_tablica == NULL) {
+			printf("Blad alokacji pamieci.\n");
+			exit(0);
+		}
+		// przekopiowanie zawartości
+		for (int i = 0; i < (*rozmiar) - 1; i++) {
+			nowa_tablica[i] = tablica[i];
+		}
+		free(tablica);
+	}
+	printf("Podaj dane nowego pojazdu:\n");
+	printf("Marka: ");
+	scanf("%s", nowa_tablica[(*rozmiar) - 1].marka);
+	printf("Model: ");
+	scanf("%s", nowa_tablica[(*rozmiar) - 1].model);
+	printf("Rok produkcji: ");
+	scanf("%d", &nowa_tablica[(*rozmiar) - 1].rok_produkcji);
+	printf("Pojemnosc silnika: ");
+	scanf("%f", &nowa_tablica[(*rozmiar) - 1].pojemnosc_silnika);
+	return nowa_tablica;
+}
+
+
+
+int main() {
+	const char *nazwa_pliku = "dane.txt";
+	FILE *plik = fopen(nazwa_pliku, "r");
+	if (plik == NULL) {
+		printf("Blad otwarcia pliku.\n");
+		return 1;
+	}
+
+	int liczba_wierszy = policz_wiersze(plik);
+	struct pojazd *tablica = wczytaj_zawartosc("dane.txt", liczba_wierszy);
+	printf("Zawartosc tablicy wczytana z pliku:\n");
+	wypisz_zawartosc(tablica, liczba_wierszy);
+
+	tablica = powieksz_tablice(tablica, &liczba_wierszy);
+
+	char nazwa_pliku2[100];
+	printf("Podaj nazwe pliku do zapisu: ");
+	scanf("%s", nazwa_pliku2);
+
+	FILE *plik_do_zapisu = fopen(nazwa_pliku2, "w");
+	if (plik_do_zapisu == NULL) {
+		printf("Blad podczas otwierania pliku do zapisu.");
+		return 1;
+	}
+
+	for (int i = 0; i < liczba_wierszy; i++) {
+		fprintf(plik_do_zapisu, "%s %s %d %.2f\n", tablica[i].marka, tablica[i].model, tablica[i].rok_produkcji, tablica[i].pojemnosc_silnika);
+	}
+
+	fclose(plik_do_zapisu);
+	free(tablica);
+	return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct pojazd {
+	char marka[40];
+	char model[40];
+	int rok_produkcji;
+	float pojemnosc_silnika;
+};
+
+int policz_wiersze(FILE *plik) {
+	int liczba_wierszy = 0;
+	char buffer[100]; // zakladamy, że linia w pliku nie bedzie dluższa niż 100 znaków
+
+	while (fgets(buffer, sizeof(buffer), plik) != NULL) {
+		liczba_wierszy++;
+	}
+
+	rewind(plik); // ustawienie wskaźnika na poczatek pliku
+	return liczba_wierszy;
+}
+
+struct pojazd *wczytaj_zawartosc(const char *nazwa_pliku, int liczba_wierszy) {
+	FILE *plik = fopen(nazwa_pliku, "r");
+	if (plik == NULL) {
+		printf("Blad otwarcia pliku.\n");
+		exit(0);
+	}
+
+	struct pojazd *tablica = malloc(liczba_wierszy * sizeof(struct pojazd));
+	if (tablica == NULL) {
+		printf("Blad alokacji pamieci.\n");
+		exit(0);
+	}
+
+	for (int i = 0; i < liczba_wierszy; i++) {
+		fscanf(plik, "%s %s %d %f", tablica[i].marka, tablica[i].model, &tablica[i].rok_produkcji, &tablica[i].pojemnosc_silnika);
+	}
+
+	fclose(plik);
+	return tablica;
+}
+
+void wypisz_zawartosc(struct pojazd *tablica, int rozmiar) {
+	for (int i = 0; i < rozmiar; i++) {
+		printf("Marka: %s, Model: %s, Rok produkcji: %d, Pojemnosc silnika: %.2f\n",
+			tablica[i].marka, tablica[i].model, tablica[i].rok_produkcji, tablica[i].pojemnosc_silnika);
+	}
+}
+
+struct pojazd *powieksz_tablice(struct pojazd *tablica, int *rozmiar) {
+	(*rozmiar)++;
+	struct pojazd *nowa_tablica = realloc(tablica, (*rozmiar) * sizeof(struct pojazd));
+	if (nowa_tablica == NULL) {
+		nowa_tablica = malloc((*rozmiar) * sizeof(struct pojazd));
+		if (nowa_tablica == NULL) {
+			printf("Blad alokacji pamieci.\n");
+			exit(0);
+		}
+		// przekopiowanie zawartości
+		for (int i = 0; i < (*rozmiar) - 1; i++) {
+			nowa_tablica[i] = tablica[i];
+		}
+		free(tablica);
+	}
+	printf("Podaj dane nowego pojazdu:\n");
+	printf("Marka: ");
+	scanf("%s", nowa_tablica[(*rozmiar) - 1].marka);
+	printf("Model: ");
+	scanf("%s", nowa_tablica[(*rozmiar) - 1].model);
+	printf("Rok produkcji: ");
+	scanf("%d", &nowa_tablica[(*rozmiar) - 1].rok_produkcji);
+	printf("Pojemnosc silnika: ");
+	scanf("%f", &nowa_tablica[(*rozmiar) - 1].pojemnosc_silnika);
+	return nowa_tablica;
+}
+
+struct pojazd *znajdz_pojazdy(int rok, struct pojazd *tablica, int rozmiar, int *nowy_rozmiar) {
+	int liczba_pasujacych = 0;
+
+	// Liczenie ilości pasujacych pojazdów
+	for (int i = 0; i < rozmiar; i++) {
+		if (tablica[i].rok_produkcji == rok) {
+			liczba_pasujacych++;
+		}
+	}
+
+	// Alokacja nowej tablicy na pasujace pojazdy
+	struct pojazd *nowa_tablica = malloc(liczba_pasujacych * sizeof(struct pojazd));
+	if (nowa_tablica == NULL) {
+		printf("Blad alokacji pamieci.\n");
+		exit(0);
+	}
+
+	// Kopiowanie pasujacych pojazdów do nowej tablicy
+	int index_nowy = 0;
+	for (int i = 0; i < rozmiar; i++) {
+		if (tablica[i].rok_produkcji == rok) {
+			nowa_tablica[index_nowy++] = tablica[i];
+			// Nadpisanie wartości w starej tablicy zerami
+			memset(&tablica[i], 0, sizeof(struct pojazd));
+		}
+	}
+
+	*nowy_rozmiar = liczba_pasujacych;
+	return nowa_tablica;
+}
+
+int main() {
+	const char *nazwa_pliku = "dane.txt";
+	FILE *plik = fopen(nazwa_pliku, "r");
+	if (plik == NULL) {
+		printf("Blad otwarcia pliku.\n");
+		return 1;
+	}
+
+	int liczba_wierszy = policz_wiersze(plik);
+	fclose(plik);
+
+	struct pojazd *tablica = wczytaj_zawartosc(nazwa_pliku, liczba_wierszy);
+	wypisz_zawartosc(tablica, liczba_wierszy);
+
+	tablica = powieksz_tablice(tablica, &liczba_wierszy);
+
+	int rok_szukany;
+	printf("Podaj rok produkcji do wyszukania: ");
+	scanf("%d", &rok_szukany);
+
+	int nowy_rozmiar;
+	struct pojazd *pasujace_pojazdy = znajdz_pojazdy(rok_szukany, tablica, liczba_wierszy, &nowy_rozmiar);
+
+	printf("Znalezione pojazdy:\n");
+	wypisz_zawartosc(pasujace_pojazdy, nowy_rozmiar);
+	printf("\nTablica przed zwolnieniem zasobow:\n");
+	wypisz_zawartosc(tablica, liczba_wierszy);
+
+	printf("\nTablica po zwolnieniu zasobow:\n");
+	free(tablica);
+	tablica = NULL;
+	wypisz_zawartosc(tablica, 0);
+
+	printf("\nTablica nowo alokowana:\n");
+	wypisz_zawartosc(pasujace_pojazdy, nowy_rozmiar);
+
+	// Zwolnienie zasobów
+	free(pasujace_pojazdy);
+	return 0;
+}
