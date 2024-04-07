@@ -1,0 +1,243 @@
+#pragma warning( disable : 4996 )
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SIZE 100
+
+struct pomiar {
+	unsigned int nr_pomiaru;
+	unsigned int nr_czujnika;
+	char data_i_czas[20];
+	double temp;
+	struct pomiar *nast;
+	struct pomiar *poprz;
+};
+
+struct HeadPointers {
+	struct pomiar *head1;
+	struct pomiar *head2;
+	struct pomiar *head3;
+	struct pomiar *head4;
+};
+
+struct pomiar *wczytaj_pomiary(const char *nazwa_pliku) {
+	FILE *plik = fopen(nazwa_pliku, "r");
+	if (plik == NULL) {
+		printf("Błąd otwarcia pliku.\n");
+		exit(0);
+	}
+
+	struct pomiar *poczatek = NULL;
+	struct pomiar *poprzedni = NULL;
+
+	while (!feof(plik)) {
+		struct pomiar *nowy = (struct pomiar *)malloc(sizeof(struct pomiar));
+		if (nowy == NULL) {
+			printf("Blad alokacji pamieci.\n");
+			exit(0);
+		}
+
+		if (fscanf(plik, "%u %u %19s %lf", &nowy->nr_pomiaru, &nowy->nr_czujnika, nowy->data_i_czas, &nowy->temp) != 4) {
+			free(nowy);
+			break;
+		}
+
+		nowy->nast = NULL;
+		nowy->poprz = poprzedni;
+
+		if (poprzedni != NULL)
+			poprzedni->nast = nowy;
+		else
+			poczatek = nowy;
+
+		poprzedni = nowy;
+	}
+
+	fclose(plik);
+	return poczatek;
+}
+
+void wypisz_ilosc_pomiarow(struct pomiar *poczatek) {
+	int licznik = 0;
+	struct pomiar *aktualny = poczatek;
+
+	while (aktualny != NULL) {
+		licznik++;
+		aktualny = aktualny->nast;
+	}
+
+	printf("Liczba pomiarow: %d\n", licznik);
+
+	if (licznik > 0) {
+		printf("Pierwszy pomiar:\n");
+		printf("Nr pomiaru: %u\n", poczatek->nr_pomiaru);
+		printf("Nr czujnika: %u\n", poczatek->nr_czujnika);
+		printf("Data i czas: %s\n", poczatek->data_i_czas);
+		printf("Temperatura: %.2lf\n", poczatek->temp);
+
+		struct pomiar *ostatni = poczatek;
+		while (ostatni->nast != NULL)
+			ostatni = ostatni->nast;
+
+		printf("Ostatni pomiar:\n");
+		printf("Nr pomiaru: %u\n", ostatni->nr_pomiaru);
+		printf("Nr czujnika: %u\n", ostatni->nr_czujnika);
+		printf("Data i czas: %s\n", ostatni->data_i_czas);
+		printf("Temperatura: %.2lf\n", ostatni->temp);
+	}
+}
+
+struct HeadPointers podziel_pomiary(struct pomiar *poczatek) {
+	struct HeadPointers pointers;
+
+	pointers.head1 = NULL;
+	pointers.head2 = NULL;
+	pointers.head3 = NULL;
+	pointers.head4 = NULL;
+
+	struct pomiar *aktualny = poczatek;
+
+	while (aktualny != NULL) {
+		struct pomiar *nowy = (struct pomiar *)malloc(sizeof(struct pomiar));
+		if (nowy == NULL) {
+			printf("Blad alokacji pamieci.\n");
+			exit(0);
+		}
+
+		memcpy(nowy, aktualny, sizeof(struct pomiar));
+
+		if (aktualny->nr_czujnika == 1) {
+			nowy->nast = pointers.head1;
+			if (pointers.head1 != NULL)
+				pointers.head1->poprz = nowy;
+			pointers.head1 = nowy;
+		}
+		else if (aktualny->nr_czujnika == 2) {
+			nowy->nast = pointers.head2;
+			if (pointers.head2 != NULL)
+				pointers.head2->poprz = nowy;
+			pointers.head2 = nowy;
+		}
+		else if (aktualny->nr_czujnika == 3) {
+			nowy->nast = pointers.head3;
+			if (pointers.head3 != NULL)
+				pointers.head3->poprz = nowy;
+			pointers.head3 = nowy;
+		}
+		else if (aktualny->nr_czujnika == 4) {
+			nowy->nast = pointers.head4;
+			if (pointers.head4 != NULL)
+				pointers.head4->poprz = nowy;
+			pointers.head4 = nowy;
+		}
+
+		aktualny = aktualny->nast;
+	}
+
+	return pointers;
+}
+
+struct pomiar *znajdz_min_max(struct pomiar *poczatek) {
+	if (poczatek == NULL) {
+		printf("Lista jest pusta.\n");
+		return NULL;
+	}
+
+	struct pomiar *min_temp = poczatek;
+	struct pomiar *max_temp = poczatek;
+
+	struct pomiar *aktualny = poczatek->nast;
+
+	while (aktualny != NULL) {
+		if (aktualny->temp < min_temp->temp)
+			min_temp = aktualny;
+		if (aktualny->temp > max_temp->temp)
+			max_temp = aktualny;
+		aktualny = aktualny->nast;
+	}
+
+	struct pomiar *duplikat_min = (struct pomiar *)malloc(sizeof(struct pomiar));
+	struct pomiar *duplikat_max = (struct pomiar *)malloc(sizeof(struct pomiar));
+
+	memcpy(duplikat_min, min_temp, sizeof(struct pomiar));
+	memcpy(duplikat_max, max_temp, sizeof(struct pomiar));
+
+	min_temp->nast = duplikat_min;
+	duplikat_min->poprz = min_temp;
+	duplikat_min->nast = NULL;
+
+	max_temp->nast = duplikat_max;
+	duplikat_max->poprz = max_temp;
+	duplikat_max->nast = NULL;
+
+	return poczatek;
+}
+
+int main() {
+	struct pomiar *lista_pomiarow = wczytaj_pomiary("temp-na-zewn.txt");
+	if (lista_pomiarow == NULL) {
+		printf("Plik jest pusty.\n");
+		exit(0);
+	}
+
+	printf("Lista ze wszystkimi pomiarami:\n");
+	wypisz_ilosc_pomiarow(lista_pomiarow);
+
+	struct HeadPointers pointers = podziel_pomiary(lista_pomiarow);
+	free(lista_pomiarow);
+
+	printf("\nLista dla czujnika 1:\n");
+	wypisz_ilosc_pomiarow(pointers.head1);
+	printf("\n");
+	lista_pomiarow = znajdz_min_max(pointers.head1);
+	wypisz_ilosc_pomiarow(lista_pomiarow);
+	free(lista_pomiarow);
+
+	printf("\nLista dla czujnika 2:\n");
+	wypisz_ilosc_pomiarow(pointers.head2);
+	printf("\n");
+	lista_pomiarow = znajdz_min_max(pointers.head2);
+	wypisz_ilosc_pomiarow(lista_pomiarow);
+	free(lista_pomiarow);
+
+	printf("\nLista dla czujnika 3:\n");
+	wypisz_ilosc_pomiarow(pointers.head3);
+	printf("\n");
+	lista_pomiarow = znajdz_min_max(pointers.head3);
+	wypisz_ilosc_pomiarow(lista_pomiarow);
+	free(lista_pomiarow);
+
+	printf("\nLista dla czujnika 4:\n");
+	wypisz_ilosc_pomiarow(pointers.head4);
+	printf("\n");
+	lista_pomiarow = znajdz_min_max(pointers.head4);
+	wypisz_ilosc_pomiarow(lista_pomiarow);
+	free(lista_pomiarow);
+
+	// Zwolnienie pamięci zaalokowanej dla czterech list
+	struct pomiar *tmp;
+	while (pointers.head1 != NULL) {
+		tmp = pointers.head1;
+		pointers.head1 = pointers.head1->nast;
+		free(tmp);
+	}
+	while (pointers.head2 != NULL) {
+		tmp = pointers.head2;
+		pointers.head2 = pointers.head2->nast;
+		free(tmp);
+	}
+	while (pointers.head3 != NULL) {
+		tmp = pointers.head3;
+		pointers.head3 = pointers.head3->nast;
+		free(tmp);
+	}
+	while (pointers.head4 != NULL) {
+		tmp = pointers.head4;
+		pointers.head4 = pointers.head4->nast;
+		free(tmp);
+	}
+
+	return 0;
+}
