@@ -241,3 +241,128 @@ int main() {
 
 	return 0;
 }
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct pomiar {
+	unsigned int nr_pomiaru;
+	unsigned int nr_czujnika;
+	char data_i_czas[20];
+	double temp;
+	struct pomiar *nast;
+	struct pomiar *poprz;
+};
+
+double znajdz_mediane(struct pomiar *poczatek) {
+	if (poczatek == NULL || poczatek->nast == NULL || poczatek->nast->nast == NULL)
+		return poczatek->temp;
+
+	double temp1 = poczatek->poprz->temp;
+	double temp2 = poczatek->temp;
+	double temp3 = poczatek->nast->temp;
+
+	double median;
+
+	if ((temp1 >= temp2 && temp1 <= temp3) || (temp1 <= temp2 && temp1 >= temp3))
+		median = temp1;
+	else if ((temp2 >= temp1 && temp2 <= temp3) || (temp2 <= temp1 && temp2 >= temp3))
+		median = temp2;
+	else
+		median = temp3;
+
+	return median;
+}
+
+void filtruj_medianowo(struct pomiar *poczatek) {
+	struct pomiar *aktualny = poczatek->nast;
+
+	while (aktualny != NULL && aktualny->nast != NULL) {
+		double temp_przed_filtracja = aktualny->temp;
+
+		aktualny->temp = znajdz_mediane(aktualny);
+
+		aktualny = aktualny->nast;
+
+		// Ustawienie poprzedniego temperatury na niezmienioną wartość
+		if (aktualny != NULL)
+			aktualny->poprz->temp = temp_przed_filtracja;
+	}
+}
+
+void wypisz_liste_do_pliku(const char *nazwa_pliku, struct pomiar *poczatek) {
+	FILE *plik = fopen(nazwa_pliku, "w");
+	if (plik == NULL) {
+		printf("Błąd otwarcia pliku.\n");
+		exit(0);
+	}
+
+	struct pomiar *aktualny = poczatek;
+	while (aktualny != NULL) {
+		fprintf(plik, "%u %u %s %.2lf\n", aktualny->nr_pomiaru, aktualny->nr_czujnika, aktualny->data_i_czas, aktualny->temp);
+		aktualny = aktualny->nast;
+	}
+
+	fclose(plik);
+}
+
+void wczytaj_liste_z_pliku(const char *nazwa_pliku, struct pomiar **poczatek) {
+	FILE *plik = fopen(nazwa_pliku, "r");
+	if (plik == NULL) {
+		printf("Błąd otwarcia pliku.\n");
+		exit(0);
+	}
+
+	*poczatek = NULL;
+	struct pomiar *poprzedni = NULL;
+
+	while (!feof(plik)) {
+		struct pomiar *nowy = (struct pomiar *)malloc(sizeof(struct pomiar));
+		if (nowy == NULL) {
+			printf("Błąd alokacji pamięci.\n");
+			exit(0);
+		}
+
+		if (fscanf(plik, "%u %u %19s %lf", &nowy->nr_pomiaru, &nowy->nr_czujnika, nowy->data_i_czas, &nowy->temp) != 4) {
+			free(nowy);
+			break;
+		}
+
+		nowy->nast = NULL;
+		nowy->poprz = poprzedni;
+
+		if (poprzedni != NULL)
+			poprzedni->nast = nowy;
+		else
+			*poczatek = nowy;
+
+		poprzedni = nowy;
+	}
+
+	fclose(plik);
+}
+
+int main() {
+	// Wczytanie danych z pliku
+	struct pomiar *lista = NULL;
+	wczytaj_liste_z_pliku("temp-na-zewn.txt", &lista);
+
+	// Wywołanie funkcji filtrującej medianowo
+	filtruj_medianowo(lista);
+
+	// Zapisanie zmodyfikowanej listy do pliku
+	wypisz_liste_do_pliku("zmodyfikowane_pomiary.txt", lista);
+
+	// Zwolnienie pamięci
+	struct pomiar *tmp;
+	while (lista != NULL) {
+		tmp = lista;
+		lista = lista->nast;
+		free(tmp);
+	}
+
+	return 0;
+}
