@@ -1,0 +1,216 @@
+#pragma warning( disable : 4996 )
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <errno.h>
+
+#define SIZE 20
+
+void czas(char *s) {
+	time_t temp_now;
+	time(&temp_now);
+	struct tm *now = localtime(&temp_now);
+	strftime(s, 100, "%Y.%m.%d %X", now);
+}
+
+void wpisz_do_log(FILE *log, const char *komunikat, const char *nick) {
+	char tbuf[100];
+	czas(tbuf);
+	fprintf(log, "%s %s", tbuf, komunikat);
+	if (nick != NULL) {
+		fprintf(log, ", gracz: %s", nick);
+	}
+	fprintf(log, "\n");
+}
+void gra(char *nick) {
+	FILE *log = fopen("log.txt", "a+");
+	if (log == NULL) {
+		printf("Nie udalo sie otworzyc pliku log.txt: %s\n", strerror(errno));
+		exit(1);
+	}
+	wpisz_do_log(log, " rozpoczecie gry", nick);
+	srand(time(NULL));
+
+	char fname[SIZE];
+	strcpy(fname, "gra-");
+	strcat(fname, nick);
+	strcat(fname, ".txt");
+	FILE *out = fopen(fname, "a+");
+	if (out == NULL) {
+		fprintf(stderr, "Nie udalo sie otworzyc pliku %s: %s\n", fname, strerror(errno));
+		wpisz_do_log(log, "Niepowodzenie otwarcia pliku", nick);
+		fclose(log);
+		return;
+	}
+
+	printf("Podaj liczbe par cyfr: ");
+	int liczba_par;
+	scanf("%d", &liczba_par);
+	fprintf(log, " liczba par cyfr: %d\n", liczba_par);
+
+	for (int i = 0; i < liczba_par; i++) {
+		int liczba1 = rand() % 100;
+		int liczba2 = rand() % 100;
+		int wynik = liczba1 + liczba2;
+		printf("Para cyfr: %d %d\n", liczba1, liczba2);
+		printf("Podaj sume: ");
+		int odpowiedz;
+		scanf("%d", &odpowiedz);
+		if (odpowiedz == wynik) {
+			printf("Poprawna odpowiedz!\n");
+			fprintf(out, "%d %d %d 1\n", liczba1, liczba2, wynik);
+		}
+		else {
+			printf("Niepoprawna odpowiedz!\n");
+			fprintf(out, "%d %d %d 0\n", liczba1, liczba2, wynik);
+		}
+	}
+
+	fclose(out);
+	wpisz_do_log(log, " zakonczenie gry", nick);
+	fclose(log);
+}
+
+
+int main() {
+	printf("Witaj w grze!\n");
+	printf("Twoim zadaniem jest podanie sumy dwoch wylosowanych liczb.\n");
+	FILE *log = fopen("log.txt", "a+");
+	if (log == NULL) {
+		printf("Nie udalo sie otworzyc pliku log.txt: %s\n", strerror(errno));
+		exit(1);
+	}
+	wpisz_do_log(log, " uruchomienie programu", NULL);
+
+	char nick[SIZE];
+	printf("Podaj nick: ");
+	scanf("%s", nick);
+
+	int wybor;
+	do {
+		gra(nick);
+		printf("Czy chcesz zagrac ponownie? (1-tak, 0-nie): ");
+		scanf("%d", &wybor);
+	} while (wybor == 1);
+
+	wpisz_do_log(log, " zakonczenie programu", NULL);
+	fclose(log);
+
+	return 0;
+}
+
+
+
+
+#pragma warning( disable : 4996 )
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <errno.h>
+
+#define SIZE 20
+
+void czas(char *s) {
+	time_t temp_now;
+	time(&temp_now);
+	struct tm *now = localtime(&temp_now);
+	strftime(s, 100, "%Y.%m.%d %X", now);
+}
+
+void wpisz_do_log(FILE *log, const char *komunikat, const char *nick) {
+	char tbuf[100];
+	czas(tbuf);
+	fprintf(log, "%s %s", tbuf, komunikat);
+	if (nick != NULL) {
+		fprintf(log, ", gracz: %s", nick);
+	}
+	fprintf(log, "\n");
+}
+
+void gra(char *nick) {
+	FILE *log = fopen("log.txt", "a+");
+	if (log == NULL) {
+		printf("Nie udalo sie otworzyc pliku log.txt: %s\n", strerror(errno));
+		exit(1);
+	}
+	wpisz_do_log(log, " rozpoczecie gry", nick);
+	srand(time(NULL));
+
+	char fname[SIZE];
+	strcpy(fname, "gra-");
+	strcat(fname, nick);
+	strcat(fname, ".txt");
+	FILE *out = fopen(fname, "a+");
+	if (out == NULL) {
+		fprintf(stderr, "Nie udalo sie otworzyc pliku %s: %s\n", fname, strerror(errno));
+		wpisz_do_log(log, "Niepowodzenie otwarcia pliku", nick);
+		fclose(log);
+		return;
+	}
+
+	printf("Podaj liczbe par cyfr: ");
+	int liczba_par;
+	scanf("%d", &liczba_par);
+	fprintf(log, "liczba par cyfr: %d\n", liczba_par);
+
+	double suma_czasu = 0;
+	for (int i = 0; i < liczba_par; i++) {
+		int liczba1 = rand() % 100;
+		int liczba2 = rand() % 100;
+		int wynik = liczba1 + liczba2;
+		printf("Para cyfr: %d %d\n", liczba1, liczba2);
+		printf("Podaj sume: ");
+		int odpowiedz;
+		time_t przed, po;
+		double czas_reakcji;
+		time(&przed);
+		scanf("%d", &odpowiedz);
+		time(&po);
+		czas_reakcji = difftime(po, przed);
+		suma_czasu += czas_reakcji;
+		if (odpowiedz == wynik) {
+			printf("Poprawna odpowiedz!\n");
+			fprintf(out, "%d %d %d 1\n", liczba1, liczba2, wynik);
+		}
+		else {
+			printf("Niepoprawna odpowiedz!\n");
+			fprintf(out, "%d %d %d 0\n", liczba1, liczba2, wynik);
+		}
+	}
+
+	double sredni_czas = suma_czasu / liczba_par;
+	printf("Sredni czas reakcji: %.4lf sekund\n", sredni_czas);
+	fprintf(log, "zakonczenie gry, sredni czas reakcji: %.4lf sekund\n", sredni_czas);
+	fclose(out);
+	fclose(log);
+}
+
+int main() {
+	printf("Witaj w grze!\n");
+	FILE *log = fopen("log.txt", "a+");
+	if (log == NULL) {
+		printf("Nie udalo sie otworzyc pliku log.txt: %s\n", strerror(errno));
+		exit(1);
+	}
+	wpisz_do_log(log, " uruchomienie programu", NULL);
+
+	char nick[SIZE];
+	printf("Podaj nick: ");
+	scanf("%s", nick);
+
+	int wybor;
+	do {
+		gra(nick);
+		printf("Czy chcesz zagrac ponownie? (1-tak, 0-nie): ");
+		scanf("%d", &wybor);
+	} while (wybor == 1);
+
+	wpisz_do_log(log, " zakonczenie programu", NULL);
+	fclose(log);
+
+	return 0;
+}
