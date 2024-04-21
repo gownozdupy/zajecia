@@ -1,0 +1,382 @@
+#include <iostream>
+#include <cmath>
+
+class Trapezoid {
+private:
+
+	double x1, y1;  //wspolrzedne lewego dolnego wierzcholka
+	double podst1;  //dlugosc podstawy (przy lewej krawedzi)
+	double podst2;   //dlugosc podstawy (przy prawej krawedzi)
+	double wys;
+
+public:
+	Trapezoid() {
+		x1 = 0;
+		y1 = 0;
+		podst1 = 0;
+		podst2 = 0;
+		wys = 0;
+	}
+
+	void ustaw_wym(double x, double y, double p1, double p2, double h) {
+		if (p1 <= 0 || p2 <= 0 || h <= 0) {
+			std::cout << "Bledne wartosci dlugosci bokow. Ustawiono wartosci domyslne." << std::endl;
+			podst1 = 1;
+			p2 = 1;
+			h = 1;
+		}
+		x1 = x;
+		y1 = y;
+		podst1 = p1;
+		podst2 = p2;
+		wys = h;
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujece polozenie:" << std::endl;
+		std::cout << "Lewy dolny wierzcholek: (" << x1 << ", " << y1 << ")" << std::endl;
+		std::cout << "Pole reprezentujace rozmiary:" << std::endl;
+		std::cout << "Dlugosc podstawy: " << podst1 << std::endl;
+		std::cout << "Dlugosc gornej krawedzi: " << podst2 << std::endl;
+		std::cout << "Wysokosc: " << wys << std::endl;
+		std::cout << "Pole: " << ((podst1*podst2)*wys) / 2 << std::endl;
+	}
+
+	void przeksztalc(double n) {
+		double shift = 2 * (n - x1);
+		x1 += shift;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			double srodek_x = (x1 + (x1 + podst1)) / 2;
+			double srodek_y = y1 + wys / 2;
+			podst1 *= wspolczynnik;
+			podst2 *= wspolczynnik;
+			wys *= wspolczynnik;
+			x1 = srodek_x - podst1 / 2;
+			y1 = srodek_y - wys / 2;
+		}
+	}
+};
+
+
+class Kolo {
+private:
+	double x, y;    //wspolrzedne srodka kola
+	double promien; 
+
+public:
+	Kolo() {
+		x = 0;
+		y = 0;
+		promien = 0;
+	}
+
+	void ustaw_wym(double x_srodka, double y_srodka, double r) {
+		if (r <= 0) {
+			std::cout << "Bledna wartosc promienia. Ustawiono wartosc domyllna." << std::endl;
+			r = 1;
+		}
+		x = x_srodka;
+		y = y_srodka;
+		promien = r;
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujace polozenie:" << std::endl;
+		std::cout << "Srodek kola: (" << x << ", " << y << ")" << std::endl;
+		std::cout << "Promien kola: " << promien << std::endl;
+		std::cout << "Pole: " << 3.14*promien*promien << std::endl;
+	
+	}
+
+	void przeksztalc(double n) {
+		double przesuniecie = 2 * (n - x);
+		x += przesuniecie;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			promien *= wspolczynnik;
+		}
+	}
+};
+
+int main() {
+	const int rozmiar = 3;
+	Trapezoid trapezy[rozmiar];
+	Kolo kola[rozmiar];
+
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].ustaw_wym(i * 2, i * 3, 5, 8, 4);
+		kola[i].ustaw_wym(i * 2, i * 3, 6);
+	}
+
+	std::cout << "Informacje o trapezach:" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].print_info();
+		std::cout << std::endl;
+	}
+
+	std::cout << "Informacje o kolach:" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		kola[i].print_info();
+		std::cout << std::endl;
+	}
+
+	int wybor_typu, indeks_figury, wybor_akcji;
+	std::cout << "Wybierz typ figury (1 - Trapezoid, 2 - Kolo): ";
+	std::cin >> wybor_typu;
+	std::cout << "Podaj indeks figury: ";
+	std::cin >> indeks_figury;
+		if (wybor_typu == 1 && indeks_figury >= 0 && indeks_figury < rozmiar) {
+			std::cout << "Wybierz akcje (1 - modyfikacja polozenia i rozmiaru, 2 - przeksztalcenie symetrii osiowej)" << std::endl;
+			std::cin >> wybor_akcji;
+			if (wybor_akcji == 1) {
+				double x, y, p1, p2, h;
+				std::cout << "Podaj wspolrzedna x lewego dolnego wierzcholka: ";
+				std::cin >> x;
+				std::cout << "Podaj wspolrzedna y lewego dolnego wierzcholka: ";
+				std::cin >> y;
+				std::cout << "Podaj dlugosc podstawy (przy lewej krawedzi): ";
+				std::cin >> p1;
+				std::cout << "Podaj dlugosc podstawy (przy prawej krawedzi): ";
+				std::cin >> p2;
+				std::cout << "Podaj wysokosc: ";
+				std::cin >> h;
+
+				trapezy[indeks_figury].ustaw_wym(x, y, p1, p2, h);
+				std::cout << "Nowe wartosci trapezu o indeksie " << indeks_figury << ": \n";
+				trapezy[indeks_figury].print_info();
+			}
+			else {
+				double os_symetrii;
+				std::cout << "Podaj wartosc osi symetrii dla trapezu: ";
+				std::cin >> os_symetrii;
+				trapezy[indeks_figury].przeksztalc(os_symetrii);
+				std::cout << "Nowe wartosci trapezu o indeksie " << indeks_figury << ": \n";
+				trapezy[indeks_figury].print_info();
+			}
+		}
+		else if (wybor_typu == 2 && indeks_figury >= 0 && indeks_figury < rozmiar) {
+			std::cout << "Wybierz akcje (1 - modyfikacja polozenia i rozmiaru, 2 - przeksztalcenie symetrii osiowej, 3 - skalowanie)" << std::endl;
+			std::cin >> wybor_akcji;
+			if (wybor_akcji == 1) {
+				double x, y, r;
+				std::cout << "Podaj wspolrzedna x srodka kola: ";
+				std::cin >> x;
+				std::cout << "Podaj wspolrzedna y srodka kola: ";
+				std::cin >> y;
+				std::cout << "Podaj promien: ";
+				std::cin >> r;
+				kola[indeks_figury].ustaw_wym(x, y, r);
+				std::cout << "Nowe wartosci kola o indeksie " << indeks_figury << ": \n";
+				kola[indeks_figury].print_info();
+			}
+			else if (wybor_akcji == 2) {
+				double os_symetrii;
+				std::cout << "Podaj wartosc osi symetrii dla kola: ";
+				std::cin >> os_symetrii;
+				kola[indeks_figury].przeksztalc(os_symetrii);
+				std::cout << "Nowe wartosci kola o indeksie " << indeks_figury << ": \n";
+				kola[indeks_figury].print_info();
+			}
+			else {
+				double wspolczynnik_skalowania;
+				std::cout << "Podaj wspolczynnik skalowania dla kola: ";
+				std::cin >> wspolczynnik_skalowania;
+				kola[indeks_figury].skaluj(wspolczynnik_skalowania);
+				std::cout << "Nowe wartosci kola o indeksie " << indeks_figury << ": \n";
+				kola[indeks_figury].print_info();
+			}
+		}
+		else {
+			std::cout << "Nieprawidlowy wybor typu figury lub indeksu." << std::endl;
+		}
+	
+	return 0;
+}
+
+
+#include <iostream>
+#include <cmath>
+
+class Trapezoid {
+private:
+
+	double x1, y1;  //wspolrzedne lewego dolnego wierzcholka
+	double podst1;  //dlugosc podstawy (przy lewej krawedzi)
+	double podst2;   //dlugosc podstawy (przy prawej krawedzi)
+	double wys;
+	double pole;
+
+public:
+	Trapezoid() {
+		x1 = 0;
+		y1 = 0;
+		podst1 = 0;
+		podst2 = 0;
+		wys = 0;
+		pole = 0;
+	}
+
+	void ustaw_wym(double x, double y, double p1, double p2, double h) {
+		if (p1 <= 0 || p2 <= 0 || h <= 0) {
+			std::cout << "Bledne wartosci dlugosci bokow. Ustawiono wartosci domyslne." << std::endl;
+			podst1 = 1;
+			p2 = 1;
+			h = 1;
+		}
+		x1 = x;
+		y1 = y;
+		podst1 = p1;
+		podst2 = p2;
+		wys = h;
+		obliczp();
+	}
+
+	void obliczp() {
+		pole = ((podst1*podst2)*wys) / 2;
+	}
+
+	void dodaj(const Trapezoid& inny) {
+		pole += inny.pole;
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujece polozenie:" << std::endl;
+		std::cout << "Lewy dolny wierzcholek: (" << x1 << ", " << y1 << ")" << std::endl;
+		std::cout << "Pole reprezentujace rozmiary:" << std::endl;
+		std::cout << "Dlugosc podstawy: " << podst1 << std::endl;
+		std::cout << "Dlugosc gornej krawedzi: " << podst2 << std::endl;
+		std::cout << "Wysokosc: " << wys << std::endl;
+		std::cout << "Pole: " << pole << std::endl;
+	}
+
+	void przeksztalc(double n) {
+		double shift = 2 * (n - x1);
+		x1 += shift;
+	}
+	
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			double srodek_x = (x1 + (x1 + podst1)) / 2;
+			double srodek_y = y1 + wys / 2;
+			podst1 *= wspolczynnik;
+			podst2 *= wspolczynnik;
+			wys *= wspolczynnik;
+			x1 = srodek_x - podst1 / 2;
+			y1 = srodek_y - wys / 2;
+		}
+	}
+};
+
+
+class Kolo {
+private:
+	double x, y;    //wspolrzedne srodka kola
+	double promien;
+	double pole;
+
+public:
+	Kolo() {
+		x = 0;
+		y = 0;
+		promien = 0;
+		pole = 0;
+	}
+
+	void ustaw_wym(double x_srodka, double y_srodka, double r) {
+		if (r <= 0) {
+			std::cout << "Bledna wartosc promienia. Ustawiono wartosc domyllna." << std::endl;
+			r = 1;
+		}
+		x = x_srodka;
+		y = y_srodka;
+		promien = r;
+		obliczp();
+	}
+
+	void obliczp() {
+		pole = 3.14*promien*promien;
+	}
+
+	void dodaj(const Kolo& inny) {
+		pole += inny.pole;
+	}
+
+
+	void print_info() {
+		std::cout << "Pole reprezentujace polozenie:" << std::endl;
+		std::cout << "Srodek kola: (" << x << ", " << y << ")" << std::endl;
+		std::cout << "Promien kola: " << promien << std::endl;
+		std::cout << "Pole: " << pole << std::endl;
+
+	}
+
+
+	void przeksztalc(double n) {
+		double przesuniecie = 2 * (n - x);
+		x += przesuniecie;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			promien *= wspolczynnik;
+		}
+	}
+};
+
+int main() {
+	const int rozmiar = 3;
+	Trapezoid trapezy[rozmiar];
+	Kolo kola[rozmiar];
+
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].ustaw_wym(i * 2, i * 3, 5, 8, 4);
+		kola[i].ustaw_wym(i * 2, i * 3, 6);
+	}
+
+	std::cout << "Informacje o trapezach:" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].print_info();
+		std::cout << std::endl;
+	}
+
+	std::cout << "Informacje o kolach:" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		kola[i].print_info();
+		std::cout << std::endl;
+	}
+
+	int numer_figury1, numer_figury2;
+	std::cout << "Podaj numer pierwszej figury (0, 1 lub 2): ";
+	std::cin >> numer_figury1;
+	std::cout << "Podaj numer drugiej figury (0, 1 lub 2): ";
+	std::cin >> numer_figury2;
+
+	std::cout << "\nTrapezy przed dodaniem:" << std::endl;
+	trapezy[numer_figury1].print_info();
+	trapezy[numer_figury2].print_info();
+	std::cout << "\nKola przed dodaniem:" << std::endl;
+	kola[numer_figury1].print_info();
+	kola[numer_figury2].print_info();
+
+	 Dodanie drugiej figury do pierwszej dla obu typów figur
+	trapezy[numer_figury1].dodaj(trapezy[numer_figury2]);
+	kola[numer_figury1].dodaj(kola[numer_figury2]);
+
+	 Ponowne wypisanie pól powierzchni obydwu figur
+	std::cout << "\nTrapezy po dodaniu:" << std::endl;
+	trapezy[numer_figury1].print_info();
+	trapezy[numer_figury2].print_info();
+	std::cout << "\nKola po dodaniu:" << std::endl;
+	kola[numer_figury1].print_info();
+	kola[numer_figury2].print_info();
+
+	return 0;
+}
+
+
