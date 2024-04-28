@@ -1,0 +1,505 @@
+#pragma warning( disable : 4996 )
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cmath>
+
+class Trapezoid {
+private:
+	double x1, y1;  // wspolrzedne lewego dolnego wierzcholka
+	double podst1;  // dlugosc podstawy (przy lewej krawedzi)
+	double podst2;  // dlugosc podstawy (przy prawej krawedzi)
+	double wys;
+	double pole;
+	Trapezoid* nast; // wskaźnik na następny element w liście dynamicznej
+
+public:
+	Trapezoid() {
+		std::cout << "Wywolano konstruktor domyslny (Trapezoid)!\n";
+		x1 = 0;
+		y1 = 0;
+		podst1 = 1;
+		podst2 = 1;
+		wys = 1;
+		pole = 0;
+		nast = nullptr; // inicjalizacja wskaźnika
+	}
+
+	Trapezoid(double x, double y, double p1, double p2, double h) {
+		std::cout << "Wywolano konstruktor z argumentami (Trapezoid!\n";
+		ustaw_wym(x, y, p1, p2, h);
+		nast = nullptr; // inicjalizacja wskaźnika
+	}
+
+	Trapezoid(const Trapezoid& other) {
+		std::cout << "Wywolano konstruktor kopiujacy (Trapezoid)!\n";
+		x1 = other.x1;
+		y1 = other.y1;
+		podst1 = other.podst1;
+		podst2 = other.podst2;
+		wys = other.wys;
+		pole = other.pole;
+		nast = nullptr; // inicjalizacja wskaźnika
+	}
+
+	void obliczp() {
+		pole = ((podst1 + podst2) * wys) / 2;
+	}
+
+	void ustaw_wym(double x, double y, double p1, double p2, double h) {
+		if (p1 <= 0 || p2 <= 0 || h <= 0) {
+			std::cout << "Bledne wartosci dlugosci bokow. Ustawiono wartosci domyslne." << std::endl;
+			podst1 = 1;
+			podst2 = 1;
+			wys = 1;
+		}
+		else {
+			x1 = x;
+			y1 = y;
+			podst1 = p1;
+			podst2 = p2;
+			wys = h;
+			obliczp();
+		}
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujece polozenie:" << std::endl;
+		std::cout << "Lewy dolny wierzcholek: (" << x1 << ", " << y1 << ")" << std::endl;
+		std::cout << "Pole reprezentujace rozmiary:" << std::endl;
+		std::cout << "Dlugosc podstawy: " << podst1 << std::endl;
+		std::cout << "Dlugosc gornej krawedzi: " << podst2 << std::endl;
+		std::cout << "Wysokosc: " << wys << std::endl;
+		std::cout << "Pole powierzchni: " << pole << std::endl;
+	}
+
+	void przeksztalc(double n) {
+		double shift = 2 * (n - x1);
+		x1 += shift;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			double srodek_x = (x1 + (x1 + podst1)) / 2;
+			double srodek_y = y1 + wys / 2;
+			podst1 *= wspolczynnik;
+			podst2 *= wspolczynnik;
+			wys *= wspolczynnik;
+			x1 = srodek_x - podst1 / 2;
+			y1 = srodek_y - wys / 2;
+			obliczp();
+		}
+	}
+
+	// getter dla wskaźnika na następny element w liście dynamicznej
+	Trapezoid* get_nast() const {
+		return nast;
+	}
+
+	// setter dla wskaźnika na następny element w liście dynamicznej
+	void set_nast(Trapezoid* ptr) {
+		nast = ptr;
+	}
+};
+
+
+class Kolo {
+private:
+	double x, y;    // wspolrzedne srodka kola
+	double promien;
+	double pole;
+	Kolo* nast; // wskaźnik na następny element w liście dynamicznej
+
+public:
+	Kolo() {
+		std::cout << "Wywolano konstruktor domyslny (Kolo)!\n";
+		x = 0;
+		y = 0;
+		promien = 0;
+		pole = 0;
+		nast = nullptr; // inicjalizacja wskaźnika
+	}
+
+	Kolo(double x_srodka, double y_srodka, double r) {
+		std::cout << "Wywolano konstruktor z argumentami (Kolo)!\n";
+		ustaw_wym(x_srodka, y_srodka, r);
+		nast = nullptr; // inicjalizacja wskaźnika
+	}
+
+	Kolo(const Kolo& other) {
+		std::cout << "Wywolano konstruktor kopiujacy (Kolo)!\n";
+		x = other.x;
+		y = other.y;
+		promien = other.promien;
+		pole = other.pole;
+		nast = nullptr; // inicjalizacja wskaźnika
+	}
+
+	void obliczp() {
+		pole = 3.14 * promien * promien;
+	}
+
+	void ustaw_wym(double x_srodka, double y_srodka, double r) {
+		if (r <= 0) {
+			std::cout << "Bledna wartosc promienia. Ustawiono wartosc domyllna." << std::endl;
+			r = 1;
+		}
+		x = x_srodka;
+		y = y_srodka;
+		promien = r;
+		obliczp();
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujace polozenie:" << std::endl;
+		std::cout << "Srodek kola: (" << x << ", " << y << ")" << std::endl;
+		std::cout << "Promien kola: " << promien << std::endl;
+		std::cout << "Pole powierzchni: " << pole << std::endl;
+	}
+
+	void przeksztalc(double n) {
+		double przesuniecie = 2 * (n - x);
+		x += przesuniecie;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			promien *= wspolczynnik;
+			obliczp();
+		}
+	}
+
+	// getter dla wskaźnika na następny element w liście dynamicznej
+	Kolo* get_nast() const {
+		return nast;
+	}
+
+	// setter dla wskaźnika na następny element w liście dynamicznej
+	void set_nast(Kolo* ptr) {
+		nast = ptr;
+	}
+};
+
+
+class blejtram {
+private:
+	Trapezoid* A_head;
+	Kolo* B_head;
+
+public:
+	blejtram() {
+		std::cout << "Wywolano konstruktor domyslny (blejtram)!\n";
+		A_head = nullptr;
+		B_head = nullptr;
+	}
+
+	void Dodaj_A(Trapezoid* t) {
+		if (!A_head) {
+			A_head = t;
+		}
+		else {
+			Trapezoid* current = A_head;
+			while (current->get_nast()) {
+				current = current->get_nast();
+			}
+			current->set_nast(t);
+		}
+	}
+
+	void Dodaj_B(Kolo* t) {
+		if (!B_head) {
+			B_head = t;
+		}
+		else {
+			Kolo* current = B_head;
+			while (current->get_nast()) {
+				current = current->get_nast();
+			}
+			current->set_nast(t);
+		}
+	}
+
+	void Trzecia(double n) {
+		Trapezoid* tempA = A_head;
+		while (tempA) {
+			tempA->przeksztalc(n);
+			tempA = tempA->get_nast();
+		}
+
+		Kolo* tempB = B_head;
+		while (tempB) {
+			tempB->przeksztalc(n);
+			tempB = tempB->get_nast();
+		}
+	}
+
+	void Czwarta(double wspolczynnik) {
+		Trapezoid* tempA = A_head;
+		while (tempA) {
+			tempA->skaluj(wspolczynnik);
+			tempA = tempA->get_nast();
+		}
+
+		Kolo* tempB = B_head;
+		while (tempB) {
+			tempB->skaluj(wspolczynnik);
+			tempB = tempB->get_nast();
+		}
+	}
+	void Druga() {
+		Trapezoid* tempA = A_head;
+		while (tempA) {
+			tempA->print_info();
+			tempA = tempA->get_nast();
+		}
+
+		Kolo* tempB = B_head;
+		while (tempB) {
+			tempB->print_info();
+			tempB = tempB->get_nast();
+		}
+	}
+
+	~blejtram() {
+		std::cout << "Wywolano destruktor (blejtram)!\n";
+		Trapezoid* current_a = A_head;
+		while (current_a) {
+			Trapezoid* next_a = current_a->get_nast();
+			delete current_a;
+			current_a = next_a;
+		}
+
+		Kolo* current_b = B_head;
+		while (current_b) {
+			Kolo* next_b = current_b->get_nast();
+			delete current_b;
+			current_b = next_b;
+		}
+	}
+};
+
+int main() {
+	const int rozmiar = 3;
+	Trapezoid trapezy[rozmiar];
+	Kolo kola[rozmiar];
+
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].ustaw_wym(i * 2, i * 3, 5, 8, 4);
+		kola[i].ustaw_wym(i * 2, i * 3, 6);
+	}
+
+	blejtram b;
+
+	for (int i = 0; i < rozmiar; ++i) {
+		b.Dodaj_A(new Trapezoid(trapezy[i]));
+		b.Dodaj_B(new Kolo(kola[i]));
+	}
+	b.Druga();
+	// Obsługa użytkownika
+	int wybor_metody;
+	std::cout << "Wybierz metode do wykonania (1 - przeksztalcanie wzg osi symetrii, 2 - skalowanie: ";
+	std::cin >> wybor_metody;
+
+	if (wybor_metody == 1) {
+		int os_sym;
+		std::cout << "Podaj wartosc osi symetrii: ";
+		std::cin >> os_sym;
+		b.Trzecia(os_sym);
+		std::cout << "Nowe wartosci: " << std::endl;
+		b.Druga();
+	}
+	else if (wybor_metody == 2) {
+		int n;
+		std::cout << "Podaj wartosc wspolczynnik n skalowania: ";
+		std::cin >> n;
+		b.Czwarta(n);
+		std::cout << "Nowe wartosci: " << std::endl;
+		b.Druga();
+	}
+	else {
+		std::cout << "Nieprawidlowy wybor metody." << std::endl;
+	}
+
+	return 0;
+}
+
+
+
+#pragma warning( disable : 4996 )
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cmath>
+
+class Trapezoid {
+private:
+	double x1, y1;      // Współrzędne lewego dolnego wierzchołka
+	double podst1;      // Długość podstawy (przy lewej krawędzi)
+	double podst2;      // Długość podstawy (przy prawej krawędzi)
+	double wys;
+	double pole;
+
+	// Deklaracja przyjaźni dla dostępu do pól klasy Kolo
+	friend class Kolo;
+
+public:
+	// Konstruktor z argumentem referencji do obiektu klasy Kolo
+	Trapezoid(const Kolo &kolo);
+	Trapezoid() {
+		x1 = 0;
+		y1 = 0;
+		podst1 = 0;
+		podst2 = 0;
+		wys = 0;
+	}
+
+	void ustaw_wym(double x, double y, double p1, double p2, double h) {
+		if (p1 <= 0 || p2 <= 0 || h <= 0) {
+			std::cout << "Bledne wartosci dlugosci bokow. Ustawiono wartosci domyslne." << std::endl;
+			podst1 = 1;
+			p2 = 1;
+			h = 1;
+		}
+		x1 = x;
+		y1 = y;
+		podst1 = p1;
+		podst2 = p2;
+		wys = h;
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujece polozenie:" << std::endl;
+		std::cout << "Lewy dolny wierzcholek: (" << x1 << ", " << y1 << ")" << std::endl;
+		std::cout << "Pole reprezentujace rozmiary:" << std::endl;
+		std::cout << "Dlugosc podstawy: " << podst1 << std::endl;
+		std::cout << "Dlugosc gornej krawedzi: " << podst2 << std::endl;
+		std::cout << "Wysokosc: " << wys << std::endl;
+		std::cout << "Pole: " << ((podst1*podst2)*wys) / 2 << std::endl;
+	}
+
+	void przeksztalc(double n) {
+		double shift = 2 * (n - x1);
+		x1 += shift;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			double srodek_x = (x1 + (x1 + podst1)) / 2;
+			double srodek_y = y1 + wys / 2;
+			podst1 *= wspolczynnik;
+			podst2 *= wspolczynnik;
+			wys *= wspolczynnik;
+			x1 = srodek_x - podst1 / 2;
+			y1 = srodek_y - wys / 2;
+		}
+	}
+};
+
+class Kolo {
+private:
+	double x, y;        // Współrzędne środka koła
+	double promien;
+	double pole;
+
+	// Deklaracja przyjaźni dla dostępu do pól klasy Trapezoid
+	friend class Trapezoid;
+
+public:
+	// Konstruktor z argumentem referencji do obiektu klasy Trapezoid
+	Kolo(const Trapezoid &trapezoid);
+	Kolo() {
+		x = 0;
+		y = 0;
+		promien = 0;
+	}
+
+	void ustaw_wym(double x_srodka, double y_srodka, double r) {
+		if (r <= 0) {
+			std::cout << "Bledna wartosc promienia. Ustawiono wartosc domyllna." << std::endl;
+			r = 1;
+		}
+		x = x_srodka;
+		y = y_srodka;
+		promien = r;
+	}
+
+	void print_info() {
+		std::cout << "Pole reprezentujace polozenie:" << std::endl;
+		std::cout << "Srodek kola: (" << x << ", " << y << ")" << std::endl;
+		std::cout << "Promien kola: " << promien << std::endl;
+		std::cout << "Pole: " << 3.14*promien*promien << std::endl;
+
+	}
+
+	void przeksztalc(double n) {
+		double przesuniecie = 2 * (n - x);
+		x += przesuniecie;
+	}
+
+	void skaluj(double wspolczynnik) {
+		if (wspolczynnik > 0) {
+			promien *= wspolczynnik;
+		}
+	}
+};
+
+
+// Implementacja konstruktora Trapezoid z argumentem referencji do obiektu klasy Kolo
+Trapezoid::Trapezoid(const Kolo &kolo) {
+	x1 = kolo.x - kolo.promien;        // Punkt początkowy trapezu to lewy dolny róg prostokąta okalającego koło
+	y1 = kolo.y - kolo.promien;
+	podst1 = kolo.promien * 2;         // Długość podstawy trapezu to średnica koła
+	podst2 = kolo.promien * 2;
+	wys = kolo.promien * 2;            // Wysokość trapezu to średnica koła
+	pole = 0;                          // Pole zostanie obliczone po użyciu metody obliczp()
+}
+
+// Implementacja konstruktora Kolo z argumentem referencji do obiektu klasy Trapezoid
+Kolo::Kolo(const Trapezoid &trapezoid) {
+	x = trapezoid.x1 + trapezoid.podst1 / 2;   // Środek koła to środek podstawy trapezu
+	y = trapezoid.y1 + trapezoid.wys / 2;
+	promien = trapezoid.wys / 2;               // Promień koła to połowa wysokości trapezu
+	pole = 0;                                   // Pole zostanie obliczone po użyciu metody obliczp()
+}
+
+
+int main() {
+	const int rozmiar = 3;
+	Trapezoid trapezy[rozmiar];
+	Kolo kola[rozmiar];
+
+	// Tworzenie obiektów klasy Kolo na podstawie obiektów klasy Trapezoid
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].ustaw_wym(i * 2, i * 3, 5, 8, 4);
+		kola[i] = Kolo(trapezy[i]);
+	}
+
+	std::cout << "Informacje o trapezach:" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].print_info();
+		std::cout << std::endl;
+	}
+	std::cout << "Informacje o kolach (utworzonych na podstawie trapezow):" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		kola[i].print_info();
+		std::cout << std::endl;
+	}
+
+	// Tworzenie obiektów klasy Trapezoid na podstawie obiektów klasy Kolo
+	for (int i = 0; i < rozmiar; ++i) {
+		kola[i].ustaw_wym(i * 2, i * 3, 6);
+		trapezy[i] = Trapezoid(kola[i]);
+	}
+
+	std::cout << "Informacje o kolach:" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		kola[i].print_info();
+		std::cout << std::endl;
+	}
+
+	std::cout << "Informacje o trapezach (utworzonych na podstawie kol):" << std::endl;
+	for (int i = 0; i < rozmiar; ++i) {
+		trapezy[i].print_info();
+		std::cout << std::endl;
+	}
+
+	return 0;
+}
