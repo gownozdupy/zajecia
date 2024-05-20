@@ -1,0 +1,445 @@
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Samochod {
+protected:
+	int cena;
+	string silnik;
+
+public:
+	Samochod() : cena(50000), silnik("diesel") {}
+	Samochod(const Samochod& s) : cena(s.cena), silnik(s.silnik) {}
+	Samochod(int x, string y) : cena(x), silnik(y) {}
+
+	int getCena() const { return cena; }
+	string getSilnik() const { return silnik; }
+
+	void setCena(int cen) { cena = cen; }
+	void setSilnik(string sil) { silnik = sil; }
+
+	virtual void wypisz() {
+		cout << "Cena: " << getCena() << "\nRodzaj silnika: " << getSilnik() << endl;
+	}
+	Samochod& operator+=(const Samochod& other) {
+		if (this != &other) {
+			cena += other.getCena();
+		}
+		return *this;
+	}
+	Samochod& operator=(const Samochod& other) {
+		if (this != &other) {
+			cena = other.getCena();
+		}
+		return *this;
+	}
+
+};
+
+class SamochodOsobowy : public Samochod {
+protected:
+	double pojemnosc;
+	char typSylwetki;
+
+public:
+	SamochodOsobowy() : pojemnosc(0.0), typSylwetki('S') {}
+	SamochodOsobowy(const SamochodOsobowy& so) : Samochod(so), pojemnosc(so.pojemnosc), typSylwetki(so.typSylwetki) {
+		cena = so.cena;
+	}
+	SamochodOsobowy(int cena, string silnik, double pojemnosc, char sylwetka) : Samochod(cena, silnik), pojemnosc(pojemnosc), typSylwetki(sylwetka) {}
+
+	double getpojemnosc() const { return pojemnosc; }
+	char getTypSylwetki() const { return typSylwetki; }
+
+	void setpojemnosc(double pojemnosc) { this->pojemnosc = pojemnosc; }
+	void setTypSylwetki(char sylwetka) { this->typSylwetki = sylwetka; }
+
+	void wypisz() override {
+		Samochod::wypisz();
+		cout << "Pojemnosc bagaznika: " << getpojemnosc() << "\nTyp sylwetki: " << getTypSylwetki() << endl;
+	}
+
+	SamochodOsobowy& operator+=(const SamochodOsobowy& other) {
+		Samochod::operator+=(other);
+		pojemnosc += other.getpojemnosc();
+		return *this;
+	}
+
+	SamochodOsobowy& operator=(const SamochodOsobowy& other) {
+		Samochod::operator=(other);
+		pojemnosc = other.getpojemnosc();
+		return *this;
+	}
+
+};
+
+class SamochodCiezarowy : public Samochod {
+protected:
+	double maxLadownosc;
+	int liczbaKol;
+
+public:
+	SamochodCiezarowy() : maxLadownosc(0.0), liczbaKol(4) {}
+	SamochodCiezarowy(const SamochodCiezarowy& sc) : Samochod(sc), maxLadownosc(sc.maxLadownosc), liczbaKol(sc.liczbaKol) {
+		cena = sc.cena;
+	}
+	SamochodCiezarowy(int cena, string silnik, double ladownosc, int kol) : Samochod(cena, silnik), maxLadownosc(ladownosc), liczbaKol(kol) {}
+
+	double getMaxLadownosc() const { return maxLadownosc; }
+	int getLiczbaKol() const { return liczbaKol; }
+
+	void setMaxLadownosc(double ladownosc) { this->maxLadownosc = ladownosc; }
+	void setLiczbaKol(int kol) { this->liczbaKol = kol; }
+
+	void wypisz() override {
+		Samochod::wypisz();
+		cout << "Maksymalna ladownosc: " << getMaxLadownosc() << "\nLiczba kol: " << getLiczbaKol() << endl;
+	}
+	SamochodCiezarowy& operator+=(const SamochodCiezarowy& other) {
+		Samochod::operator+=(other);
+		maxLadownosc += other.getMaxLadownosc();
+		return *this;
+	}
+	SamochodCiezarowy& operator=(const SamochodCiezarowy& other) {
+		Samochod::operator=(other);
+		maxLadownosc = other.getMaxLadownosc();
+		return *this;
+	}
+
+};
+
+struct Wezel {
+	Samochod* samochod;
+	Wezel* nastepny;
+};
+
+void dodajSamochod(Wezel*& glowa, Samochod* nowySamochod) {
+	Wezel* nowyWezel = new Wezel;
+	nowyWezel->samochod = nowySamochod;
+	nowyWezel->nastepny = glowa;
+	glowa = nowyWezel;
+}
+
+void wypiszListe(Wezel* glowa) {
+	Wezel* biezacy = glowa;
+	while (biezacy != nullptr) {
+		biezacy->samochod->wypisz();
+		cout << endl;
+		biezacy = biezacy->nastepny;
+	}
+}
+
+void usunListe(Wezel*& glowa) {
+	while (glowa != nullptr) {
+		Wezel* temp = glowa;
+		glowa = glowa->nastepny;
+		delete temp->samochod;
+		delete temp;
+	}
+}
+
+int main() {
+	Wezel* glowa = nullptr;
+
+	char wybor;
+
+	do {
+		cout << "Wybierz rodzaj samochodu (o - osobowy, c - ciezarowy): ";
+		cin >> wybor;
+
+		if (wybor == 'o') {
+			double pojemnosc;
+			char typSylwetki;
+			int cena;
+			string silnik;
+
+			cout << "Podaj cene: ";
+			cin >> cena;
+			cout << "Podaj rodzaj silnika: ";
+			cin >> silnik;
+			cout << "Podaj pojemnosc bagaznika: ";
+			cin >> pojemnosc;
+			cout << "Podaj typ sylwetki (H - hatchback, S - sedan, K - kombi, V - van): ";
+			cin >> typSylwetki;
+
+			SamochodOsobowy* nowyOsobowy = new SamochodOsobowy(cena, silnik, pojemnosc, typSylwetki);
+			dodajSamochod(glowa, nowyOsobowy);
+		}
+		else if (wybor == 'c') {
+			double maxLadownosc;
+			int liczbaKol;
+			int cena;
+			string silnik;
+
+			cout << "Podaj cene: ";
+			cin >> cena;
+			cout << "Podaj rodzaj silnika: ";
+			cin >> silnik;
+			cout << "Podaj maksymalna ladownosc: ";
+			cin >> maxLadownosc;
+			cout << "Podaj liczbe kol: ";
+			cin >> liczbaKol;
+
+			SamochodCiezarowy* nowyCiezarowy = new SamochodCiezarowy(cena, silnik, maxLadownosc, liczbaKol);
+			dodajSamochod(glowa, nowyCiezarowy);
+		}
+
+		cout << "Czy chcesz dodac kolejny samochod? (t/n): ";
+		cin >> wybor;
+	} while (wybor == 't');
+
+	cout << "Lista samochodow:" << endl;
+	wypiszListe(glowa);
+
+	SamochodOsobowy A1, A2, A3;
+	SamochodCiezarowy B1, B2, B3;
+
+	A3 += A2;
+	A1 = A2 = A3;
+	B1 = B2 += B3;
+
+	cout << "Zawartosc obiektu A1 (stworzony konstruktorami domyslnymi):" << endl;
+	A1.wypisz();
+	cout << "\nZawartosc obiektu B1 (stworzony konstruktorami domyslnymi):" << endl;
+	B1.wypisz();
+
+	SamochodOsobowy sumaOsobowych;
+	sumaOsobowych.setCena(0);
+	Wezel* biezacy = glowa;
+	while (biezacy != nullptr) {
+		SamochodOsobowy* osobowy = dynamic_cast<SamochodOsobowy*>(biezacy->samochod);
+		if (osobowy) {
+			sumaOsobowych += *osobowy;
+		}
+		biezacy = biezacy->nastepny;
+	}
+
+
+	cout << "\nZawartosc sumy obiektow typu SamochodOsobowy:" << endl;
+	sumaOsobowych.wypisz();
+
+	usunListe(glowa);
+
+	return 0;
+}
+
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Samochod {
+protected:
+	int cena;
+	string silnik;
+
+public:
+	Samochod() : cena(50000), silnik("diesel") {}
+	Samochod(const Samochod& s) : cena(s.cena), silnik(s.silnik) {}
+	Samochod(int x, string y) : cena(x), silnik(y) {}
+
+	int getCena() const { return cena; }
+	string getSilnik() const { return silnik; }
+
+	void setCena(int cen) { cena = cen; }
+	void setSilnik(string sil) { silnik = sil; }
+
+	virtual void wypisz() {
+		cout << "Cena: " << getCena() << "\nRodzaj silnika: " << getSilnik() << endl;
+	}
+	Samochod& operator+=(const Samochod& other) {
+		if (this != &other) {
+			cena += other.getCena();
+		}
+		return *this;
+	}
+	Samochod& operator=(const Samochod& other) {
+		if (this != &other) {
+			cena = other.getCena();
+		}
+		return *this;
+	}
+
+};
+
+class SamochodOsobowy : public Samochod {
+protected:
+	double pojemnosc;
+	char typSylwetki;
+
+public:
+	SamochodOsobowy() : pojemnosc(0.0), typSylwetki('S') {}
+	SamochodOsobowy(const SamochodOsobowy& so) : Samochod(so), pojemnosc(so.pojemnosc), typSylwetki(so.typSylwetki) {
+		cena = so.cena;
+	}
+	SamochodOsobowy(int cena, string silnik, double pojemnosc, char sylwetka) : Samochod(cena, silnik), pojemnosc(pojemnosc), typSylwetki(sylwetka) {}
+
+	double getpojemnosc() const { return pojemnosc; }
+	char getTypSylwetki() const { return typSylwetki; }
+
+	void setpojemnosc(double pojemnosc) { this->pojemnosc = pojemnosc; }
+	void setTypSylwetki(char sylwetka) { this->typSylwetki = sylwetka; }
+
+	void wypisz() override {
+		Samochod::wypisz();
+		cout << "Pojemnosc bagaznika: " << getpojemnosc() << "\nTyp sylwetki: " << getTypSylwetki() << endl;
+	}
+
+
+};
+
+class SamochodCiezarowy : public Samochod {
+protected:
+	double maxLadownosc;
+	int liczbaKol;
+
+public:
+	SamochodCiezarowy() : maxLadownosc(0.0), liczbaKol(4) {}
+	SamochodCiezarowy(const SamochodCiezarowy& sc) : Samochod(sc), maxLadownosc(sc.maxLadownosc), liczbaKol(sc.liczbaKol) {
+		cena = sc.cena;
+	}
+	SamochodCiezarowy(int cena, string silnik, double ladownosc, int kol) : Samochod(cena, silnik), maxLadownosc(ladownosc), liczbaKol(kol) {}
+
+	double getMaxLadownosc() const { return maxLadownosc; }
+	int getLiczbaKol() const { return liczbaKol; }
+
+	void setMaxLadownosc(double ladownosc) { this->maxLadownosc = ladownosc; }
+	void setLiczbaKol(int kol) { this->liczbaKol = kol; }
+
+	void wypisz() override {
+		Samochod::wypisz();
+		cout << "Maksymalna ladownosc: " << getMaxLadownosc() << "\nLiczba kol: " << getLiczbaKol() << endl;
+	}
+
+};
+
+struct Wezel {
+	Samochod* samochod;
+	Wezel* nastepny;
+};
+
+void dodajSamochod(Wezel*& glowa, Samochod* nowySamochod) {
+	Wezel* nowyWezel = new Wezel;
+	nowyWezel->samochod = nowySamochod;
+	nowyWezel->nastepny = glowa;
+	glowa = nowyWezel;
+}
+
+void wypiszListe(Wezel* glowa) {
+	Wezel* biezacy = glowa;
+	while (biezacy != nullptr) {
+		biezacy->samochod->wypisz();
+		cout << endl;
+		biezacy = biezacy->nastepny;
+	}
+}
+
+void usunListe(Wezel*& glowa) {
+	while (glowa != nullptr) {
+		Wezel* temp = glowa;
+		glowa = glowa->nastepny;
+		delete temp->samochod;
+		delete temp;
+	}
+}
+
+
+SamochodOsobowy operator+(const SamochodOsobowy& l, const SamochodOsobowy& p) {
+	SamochodOsobowy result(l);
+	result += p;
+	result.setpojemnosc(l.getpojemnosc() + p.getpojemnosc());
+	return result;
+}
+
+SamochodCiezarowy operator+(const SamochodCiezarowy& l, const SamochodCiezarowy& p) {
+	SamochodCiezarowy result(l);
+	result += p;
+	result.setMaxLadownosc(l.getMaxLadownosc() + p.getMaxLadownosc());
+	return result;
+}
+
+int main() {
+	Wezel* glowa = nullptr;
+
+	char wybor;
+
+	do {
+		cout << "Wybierz rodzaj samochodu (o - osobowy, c - ciezarowy): ";
+		cin >> wybor;
+
+		if (wybor == 'o') {
+			double pojemnosc;
+			char typSylwetki;
+			int cena;
+			string silnik;
+
+			cout << "Podaj cene: ";
+			cin >> cena;
+			cout << "Podaj rodzaj silnika: ";
+			cin >> silnik;
+			cout << "Podaj pojemnosc bagaznika: ";
+			cin >> pojemnosc;
+			cout << "Podaj typ sylwetki (H - hatchback, S - sedan, K - kombi, V - van): ";
+			cin >> typSylwetki;
+
+			SamochodOsobowy* nowyOsobowy = new SamochodOsobowy(cena, silnik, pojemnosc, typSylwetki);
+			dodajSamochod(glowa, nowyOsobowy);
+		}
+		else if (wybor == 'c') {
+			double maxLadownosc;
+			int liczbaKol;
+			int cena;
+			string silnik;
+
+			cout << "Podaj cene: ";
+			cin >> cena;
+			cout << "Podaj rodzaj silnika: ";
+			cin >> silnik;
+			cout << "Podaj maksymalna ladownosc: ";
+			cin >> maxLadownosc;
+			cout << "Podaj liczbe kol: ";
+			cin >> liczbaKol;
+
+			SamochodCiezarowy* nowyCiezarowy = new SamochodCiezarowy(cena, silnik, maxLadownosc, liczbaKol);
+			dodajSamochod(glowa, nowyCiezarowy);
+		}
+
+		cout << "Czy chcesz dodac kolejny samochod? (t/n): ";
+		cin >> wybor;
+	} while (wybor == 't');
+
+	cout << "Lista samochodow:" << endl;
+	wypiszListe(glowa);
+
+	SamochodOsobowy A1, A2, A3;
+	SamochodCiezarowy B1, B2, B3;
+	A2 = A1 + A2;
+	B2 = B1 + B2;
+
+	cout << "Zawartosc obiektu A2 (stworzony konstruktorami domyslnymi):" << endl;
+	A2.wypisz();
+	cout << "\nZawartosc obiektu B2 (stworzony konstruktorami domyslnymi):" << endl;
+	B2.wypisz();
+
+	SamochodOsobowy sumaOsobowych;
+	sumaOsobowych.setCena(0);
+	Wezel* biezacy = glowa;
+	while (biezacy != nullptr) {
+		SamochodOsobowy* osobowy = dynamic_cast<SamochodOsobowy*>(biezacy->samochod);
+		if (osobowy) {
+			sumaOsobowych = sumaOsobowych + *osobowy;
+		}
+		biezacy = biezacy->nastepny;
+	}
+
+	cout << "\nZawartosc sumy obiektow typu SamochodOsobowy:" << endl;
+	sumaOsobowych.wypisz();
+	operator + zazwyczaj tworzy nowy obiekt, podczas gdy operator += modyfikuje obiekt, na którym jest wywoływany
+	usunListe(glowa);
+
+	return 0;
+}
+
